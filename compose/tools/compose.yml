@@ -1,0 +1,89 @@
+networks:
+  lan:
+      external: true
+
+services:
+  it-tools:
+    image: 'corentinth/it-tools:latest'
+    container_name: it-tools
+    networks:
+      - lan
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:80'
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  wsocks:
+    image: monius/docker-warp-socks:latest
+    container_name: wsocks
+    privileged: true
+    ports:
+        - "19091:9091"
+    networks:
+        - lan
+    # dns:
+    #     - 8.8.8.8
+    #     - 1.1.1.1
+    cap_add:
+        - NET_ADMIN
+        - SYS_ADMIN
+    sysctls:
+        net.ipv6.conf.all.disable_ipv6: 0
+        net.ipv4.conf.all.src_valid_mark: 1
+    healthcheck:
+        test: ["CMD", "curl", "-f", "https://www.cloudflare.com/cdn-cgi/trace"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    restart: unless-stopped
+
+  vaultwarden:
+    image: 'vaultwarden/server:latest'
+    container_name: vaultwarden
+    environment:
+      - 'DOMAIN=${VW_DOMAIN}'
+      - 'SIGNUPS_ALLOWED=false'
+    networks:
+      - lan
+    volumes:
+      - '${DATA}/vw:/data'
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:80'
+      interval: 2s
+      timeout: 10s
+      retries: 15
+    restart: unless-stopped
+
+  syncthing:
+    image: 'lscr.io/linuxserver/syncthing:latest'
+    container_name: syncthing
+    environment:
+      - 'TZ=Asia/Shanghai'
+      - 'PUID=0'
+      - 'PGID=0'
+    volumes:
+      - '${DATA}/syncthing/config:/config'
+      - '${DATA}/syncthing/data1:/data1'
+    networks:
+      - lan
+    ports:
+      # - '8384:8384'
+      - '22000:22000/tcp'
+      - '22000:22000/udp'
+      - '21027:21027/udp'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8384/rest/noauth/health"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+    restart: unless-stopped
