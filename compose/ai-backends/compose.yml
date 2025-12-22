@@ -1,0 +1,127 @@
+networks:
+  lan:
+      external: true
+
+services:
+  clewdr:
+    image: ghcr.io/xerxes-2/clewdr:latest
+    container_name: clewdr
+    volumes:
+      - ${DATA}/clewdr:/etc/clewdr
+    networks:
+      - lan
+    # ports:
+    #   - "8484:8484"
+    restart: unless-stopped
+  
+  cli-proxy-api:
+    image: eceasy/cli-proxy-api:latest
+    container_name: cli-proxy-api
+    networks:
+      - lan
+    ports:
+      - "8317:8317"
+      # - "8085:8085"
+      # - "1455:1455"
+      # - "54545:54545"
+      # - "11451:11451"
+    volumes:
+      - ${DATA}/CLIProxyAPI/config.yaml:/CLIProxyAPI/config.yaml
+      - ${DATA}/CLIProxyAPI/auths:/root/.cli-proxy-api
+      - ${DATA}/CLIProxyAPI/logs:/CLIProxyAPI/logs
+    restart: unless-stopped
+
+  gemini-fastapi:
+    image: ghcr.io/luuquangvu/gemini-fastapi:latest
+    container_name: gemini-fastapi    
+    # ports:
+    #   - "18001:8000"
+    networks:
+      - lan
+    volumes:
+      - ${DATA}/gemini-fastapi/config:/app/config  # Uncomment to use a custom config file
+      # - ${DATA}/certs:/app/certs        # Uncomment to enable HTTPS with your certs
+      - ${DATA}/gemini-fastapi/data:/app/data
+      - ${DATA}/gemini-fastapi/cache:/app/cache
+    environment:
+      - GEMINI_COOKIE_PATH=/app/cache
+      # - CONFIG_SERVER__HOST=0.0.0.0
+      # - CONFIG_SERVER__PORT=8000
+      # - CONFIG_SERVER__API_KEY=${GEMINI_FASTAPI_KEY}
+      # - CONFIG_GEMINI__CLIENTS__0__ID=leizh9
+      # - CONFIG_GEMINI__CLIENTS__0__SECURE_1PSID=${GEMINI_SECURE_1PSID}
+      # - CONFIG_GEMINI__CLIENTS__0__SECURE_1PSIDTS=${GEMINI_SECURE_1PSIDTS}
+    restart: always
+
+  grok2api:
+    image: ghcr.io/chenyme/grok2api:latest
+    container_name: grok2api    
+    # ports:
+    #   - "18000:8000"
+    volumes:
+      - ${DATA}/grok2api:/app/data
+      - ${DATA}/grok2api/logs:/app/logs
+    environment:
+      - STORAGE_MODE=file
+    networks:
+      - lan
+    restart: always
+
+  # qwen2api:
+  #   container_name: qwen2api
+  #   image: rfym21/qwen2api:latest
+  #   restart: always
+  #   # ports:
+  #   #   - "3000:3000"
+  #   networks:
+  #     - lan
+  #   volumes:
+  #     #- ./qwen2api/data/data.json:/app/data/data.json
+  #     - ./qwen2api/logs:/app/logs
+  #     - ./qwen2api/caches:/app/caches
+  #   environment:
+  #     - SERVICE_PORT=3000
+  #     - API_KEY=${API_KEY}
+  #     # - LISTEN_ADDRESS=
+  #     # - PM2_INSTANCES=1
+  #     # - PM2_MAX_MEMORY=1G
+  #     # 搜索信息展示模式
+  #     # table: 使用折叠块和表格展示
+  #     # text: 使用纯文本
+  #     - SEARCH_INFO_MODE=table
+  #     # 是否输出思考过程
+  #     - OUTPUT_THINK=true
+  #     # 简化模型映射 (true: 只返回基础模型, false: 返回完整模型列表)
+  #     - SIMPLE_MODEL_MAP=false
+  #     # redis 连接地址(如果使用redis模式，则必填，当redis使用tls时将redis://替换为rediss://)
+  #     # - REDIS_URL=
+  #     # 数据保存模式
+  #     - DATA_SAVE_MODE=none
+  #     # 账号(如果使用redis和file模式，则不需要填写)
+  #     - ACCOUNTS=${ACCOUNTS}
+  #     # 图片缓存
+  #     - CACHE_MODE=file
+
+  # zai2api:
+  #   image: zyphrzero/z-ai2api-python:latest
+  #   container_name: zai2api
+  #   ports:
+  #     - "18080:8080"
+  #   networks:
+  #     - lan
+  #   # env_file:
+  #   #   - ./zai2api/.env
+  #   volumes:
+  #     - ./zai2api/data:/app/data
+  #     - ./zai2api/logs:/app/logs
+  #   environment:
+  #     - ADMIN_PASSWORD=admin123
+  #     - AUTH_TOKEN=sk-05123503
+  #     - SKIP_AUTH_TOKEN=false
+  #     - DEBUG_LOGGING=true
+  #     - ANONYMOUS_MODE=true
+  #     - TOOL_SUPPORT=true
+  #     - SCAN_LIMIT=200000
+  #     - DB_PATH=/app/data/tokens.db    
+  #   restart: unless-stopped
+
