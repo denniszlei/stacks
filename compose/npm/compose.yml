@@ -5,7 +5,7 @@ services:
     image: docker.io/zoeyvid/npmplus:latest # or ghcr.io/zoeyvid/npmplus:latest
     restart: always
     # network_mode: host
-    network:
+    networks:
       - lan
     ports:
       - '80:80'      # HTTP 流量
