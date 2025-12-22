@@ -7,8 +7,9 @@ services:
   aistudio2api:
     image: ghcr.io/denniszlei/aistudiobuildws:latest
     container_name: aistudio2api
-    env_file:
-      - .env
+    environment:
+      - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
+      - CAMOUFOX_PROXY=${AIBUILD_PROXY}
     volumes:
       - ./cookies:/app/cookies:rw
       - ./logs:/app/logs:rw
