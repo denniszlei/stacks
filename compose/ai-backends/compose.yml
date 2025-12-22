@@ -4,7 +4,7 @@ networks:
 
 services:
   aistudio2api:
-    image: ghcr.io/denniszlei/aistudiobuildws:latest
+    image: ghcr.io/denniszlei/aistudiobuildws:main
     container_name: aistudio2api
     environment:
       - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
