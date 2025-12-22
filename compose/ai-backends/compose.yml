@@ -55,12 +55,6 @@ services:
       - ${DATA}/gemini-fastapi/cache:/app/cache
     environment:
       - GEMINI_COOKIE_PATH=/app/cache
-      # - CONFIG_SERVER__HOST=0.0.0.0
-      # - CONFIG_SERVER__PORT=8000
-      # - CONFIG_SERVER__API_KEY=${GEMINI_FASTAPI_KEY}
-      # - CONFIG_GEMINI__CLIENTS__0__ID=leizh9
-      # - CONFIG_GEMINI__CLIENTS__0__SECURE_1PSID=${GEMINI_SECURE_1PSID}
-      # - CONFIG_GEMINI__CLIENTS__0__SECURE_1PSIDTS=${GEMINI_SECURE_1PSIDTS}
     restart: always
 
   clewdr:
