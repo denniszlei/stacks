@@ -3,17 +3,26 @@ networks:
       external: true
 
 services:
-  clewdr:
-    image: ghcr.io/xerxes-2/clewdr:latest
-    container_name: clewdr
+  
+  aistudio2api:
+    image: ghcr.io/denniszlei/aistudiobuildws:latest
+    container_name: aistudio2api
+    env_file:
+      - .env
     volumes:
-      - ${DATA}/clewdr:/etc/clewdr
+      - ./cookies:/app/cookies:rw
+      - ./logs:/app/logs:rw
+    restart: always
     networks:
       - lan
-    # ports:
-    #   - "8484:8484"
-    restart: unless-stopped
-  
+    deploy:
+      resources:
+        limits:
+          cpus: '2'       # 限制最多使用 2 个 CPU 核心
+          memory: 4G        # 限制内存最大为 2GB
+        reservations:
+          memory: 2G      # 保证至少分配 512M 内存
+
   cli-proxy-api:
     image: eceasy/cli-proxy-api:latest
     container_name: cli-proxy-api
@@ -52,6 +61,17 @@ services:
       # - CONFIG_GEMINI__CLIENTS__0__SECURE_1PSID=${GEMINI_SECURE_1PSID}
       # - CONFIG_GEMINI__CLIENTS__0__SECURE_1PSIDTS=${GEMINI_SECURE_1PSIDTS}
     restart: always
+
+  clewdr:
+    image: ghcr.io/xerxes-2/clewdr:latest
+    container_name: clewdr
+    volumes:
+      - ${DATA}/clewdr:/etc/clewdr
+    networks:
+      - lan
+    # ports:
+    #   - "8484:8484"
+    restart: unless-stopped
 
   grok2api:
     image: ghcr.io/chenyme/grok2api:latest
