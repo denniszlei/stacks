@@ -3,7 +3,6 @@ networks:
       external: true
 
 services:
-  
   aistudio2api:
     image: ghcr.io/denniszlei/aistudiobuildws:latest
     container_name: aistudio2api
@@ -11,8 +10,8 @@ services:
       - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
       - CAMOUFOX_PROXY=${AIBUILD_PROXY}
     volumes:
-      - ./cookies:/app/cookies:rw
-      - ./logs:/app/logs:rw
+      - ${DATA}/buildws/cookies:/app/cookies:rw
+      - ${DATA}/buildws/logs:/app/logs:rw
     restart: always
     networks:
       - lan
