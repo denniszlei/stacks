@@ -20,7 +20,7 @@ services:
       - --server-username=${KOPIA_UI_USER}
       - --server-password=${KOPIA_UI_PASS}
     environment:
-      - KOPIA_PASSWORD=${KOPIA_UI_PASS}
+      - KOPIA_PASSWORD=${KOPIA_REPO_PASS}
       - TZ=${TZ}
       - USER=${KOPIA_USER}
     volumes:
