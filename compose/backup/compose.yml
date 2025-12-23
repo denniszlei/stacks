@@ -1,0 +1,32 @@
+networks:
+  lan:
+      external: true
+
+services:
+  kopia:
+    image: kopia/kopia:latest
+    container_name: kopia
+    hostname: oci-sjc
+    restart: unless-stopped
+    ports:
+      - 51515:51515
+    networks:
+      - lan
+    command:
+      - server
+      - start
+      - --insecure
+      - --address=0.0.0.0:51515
+      - --server-username=${KOPIA_UI_USER}
+      - --server-password=${KOPIA_UI_PASS}
+    environment:
+      - KOPIA_PASSWORD=${KOPIA_UI_PASS}
+      - TZ=${TZ}
+      - USER=${KOPIA_USER}
+    volumes:
+      # Kopia 自身数据
+      - ${DATA}/kopia-config:/app/config
+      - ${DATA}/kopia-cache:/app/cache
+      # 你要备份的数据 (按需添加)
+      - /stacks:/data/stacks:ro
+      - /home:/data/home:ro
