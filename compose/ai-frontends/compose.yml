@@ -1,0 +1,110 @@
+networks:
+  lan:
+      external: true
+
+services:
+  unifiedllm:
+    container_name: unifiedllm
+    image: ghcr.io/denniszlei/unifiedllm:latest
+    # ports:
+    #   - "18002:8000"
+    environment:
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - GPTLOAD_URL=${UNI-GPTLOAD_URL}
+      - GPTLOAD_AUTH_KEY=${UNI-GPTLOAD_AUTH_KEY}
+      - DATABASE_URL=sqlite:///./data/llm_manager.db
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+    volumes:
+      # Persist database
+      - ${DATA}/unillm-data:/app/data
+      # Share uni-api config
+      - ${DATA}/unillm-uniapi:/app/uni-api-config
+    networks:
+      - lan
+    restart: unless-stopped
+
+  unillm-gptload:
+    image: ghcr.io/tbphp/gpt-load:latest
+    container_name: unillm-gptload
+    ports:
+      - "3002:3001"
+    environment:
+      - AUTH_KEY=${UNI-GPTLOAD_AUTH_KEY}
+      - PORT=3001
+      # - DATABASE_URL=sqlite:///./data/gptload.db
+    volumes:
+      # Persist GPT-Load database and configuration
+      - ${DATA}/unillm-gptload:/app/data
+    networks:
+      - lan
+    restart: unless-stopped
+
+  uni-api:
+    container_name: uni-api
+    image: yym68686/uni-api:latest
+    # environment:
+    #   - CONFIG_URL=http://file_url/api.yaml # 如果已经挂载了本地配置文件，不需要设置 CONFIG_URL
+    ports:
+      - 18003:8000
+    networks:
+      - lan
+    volumes:
+      - ${DATA}/uniapi/api.yaml:/home/api.yaml # 如果已经设置 CONFIG_URL，不需要挂载配置文件
+      - ${DATA}/uniapi/uniapi_db:/home/data # 如果不想保存统计数据，不需要挂载该文件夹
+    restart: unless-stopped
+
+  uniapi-web:
+    container_name: uni-api-web
+    image: ghcr.io/melosbot/uni-api-status:latest
+    restart: unless-stopped
+    networks:
+      - lan    
+    ports:
+      - "3005:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # 以下为容器内的路径，与 volumes 挂载点对应
+      - API_YAML_PATH=/app/config/api.yaml
+      - STATS_DB_TYPE=sqlite # 或 postgres
+      - STATS_DB_PATH=/app/data/stats.db # 如果使用 sqlite
+    volumes:
+      # 将宿主机的 api.yaml 挂载到容器内，需要【读写】权限
+      - ${DATA}/uniapi/api.yaml:/app/config/api.yaml
+      # 如果使用 sqlite，将宿主机包含 stats.db 的目录挂载到容器内，建议只读【:ro】
+      - ${DATA}/uniapi/uniapi_db:/app/data:ro
+
+  gpt-load:
+    image: ghcr.io/tbphp/gpt-load:latest
+    container_name: gpt-load
+    ports:
+      - "3001:3001"
+    networks:
+      - lan
+    # env_file:
+    #   - gpt-load.env
+    environment:
+      - AUTH_KEY=${GPTLOAD_AUTH_KEY}
+    restart: always
+    volumes:
+      - ${DATA}/gptload:/app/data
+    stop_grace_period: 10s
+    healthcheck:
+      test: wget -q --spider -T 10 -O /dev/null http://localhost:${PORT:-3001}/health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # octopus:
+  #   image: bestrui/octopus
+  #   ports:
+  #      - '18080:8080'
+  #   volumes:      
+  #      - './octopus:/app/data'
+  #   container_name: octopus
+  #   restart: unless-stopped
+  #   networks:
+  #     - lan
+
