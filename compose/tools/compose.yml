@@ -3,6 +3,15 @@ networks:
       external: true
 
 services:
+  subconverter:
+    image: 'asdlokj1qpi23/subconverter:latest'
+    container_name: subconverter
+    networks:
+      - lan
+    ports:
+      - "25500:25500"
+    restart: unless-stopped
+
   it-tools:
     image: 'corentinth/it-tools:latest'
     container_name: it-tools
