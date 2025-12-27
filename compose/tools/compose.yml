@@ -3,6 +3,27 @@ networks:
       external: true
 
 services:
+
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:latest
+    container_name: mealie
+    restart: always
+    # ports:
+    #     - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+    volumes:
+      - ${DATA}/mealie:/app/data/
+    environment:
+      # Set Backend ENV Variables Here
+      ALLOW_SIGNUP: "true"
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Shanghai
+      BASE_URL: https://cook.zlei.org
+
   subconverter:
     image: 'asdlokj1qpi23/subconverter:latest'
     container_name: subconverter
