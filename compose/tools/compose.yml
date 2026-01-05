@@ -8,6 +8,8 @@ services:
     image: whyour/qinglong:latest # 基于 Debian 的版本：whyour/qinglong:debian  
     volumes:
       - ${DATA}/qinglong:/ql/data
+    networks:
+      - lan
     # ports:
     #   - "5700:5700"
     # environment:
