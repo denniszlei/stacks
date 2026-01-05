@@ -6,6 +6,7 @@ services:
 
   qinglong:
     image: whyour/qinglong:latest # 基于 Debian 的版本：whyour/qinglong:debian  
+    container_name: qinglong
     volumes:
       - ${DATA}/qinglong:/ql/data
     networks:
