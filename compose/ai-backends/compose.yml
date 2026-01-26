@@ -4,7 +4,7 @@ networks:
 
 services:
   aistudio2api:
-    image: hkfires/aistudiobuildws:latest
+    # image: hkfires/aistudiobuildws:latest
     build: https://github.com/hkfires/AIStudioBuildWS.git
     container_name: aistudio2api
     environment:
@@ -69,7 +69,7 @@ services:
     restart: unless-stopped
 
   grok2api:
-    image: 'tomiya233/grok2api:latest'
+    # image: 'tomiya233/grok2api:latest'
     build: https://github.com/Tomiya233/grok2api.git
     container_name: grok2api    
     # ports:
