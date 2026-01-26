@@ -5,7 +5,7 @@ networks:
 services:
   aistudio2api:
     image: hkfires/aistudiobuildws:latest
-    build: https://github.com/hkfires/AIStudioBuildWS.git#main
+    build: https://github.com/hkfires/AIStudioBuildWS.git
     container_name: aistudio2api
     environment:
       - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
@@ -70,7 +70,7 @@ services:
 
   grok2api:
     image: 'tomiya233/grok2api:latest'
-    build: https://github.com/Tomiya233/grok2api.git#main
+    build: https://github.com/Tomiya233/grok2api.git
     container_name: grok2api    
     # ports:
     #   - "18000:8000"
