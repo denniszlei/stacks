@@ -68,7 +68,7 @@ services:
     restart: unless-stopped
 
   grok2api:
-    image: ghcr.io/chenyme/grok2api:latest
+    image: tomiya233/grok2api:latest
     container_name: grok2api    
     # ports:
     #   - "18000:8000"
