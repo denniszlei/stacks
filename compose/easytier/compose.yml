@@ -35,4 +35,4 @@ services:
     volumes:
       - ${DATA}/easytier/core:/root
       - /etc/machine-id:/etc/machine-id:ro # 映射宿主机机器码
-    command: --config-server udp://127.0.0.1:22020/abc
+    command: --config-server udp://127.0.0.1:22020/user
