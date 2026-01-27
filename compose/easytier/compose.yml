@@ -3,7 +3,7 @@ networks:
       external: true
 
 services:
-  easytier:
+  easytier-web:
     image: easytier/easytier:latest 
     entrypoint: easytier-web-embed
     restart: always
@@ -18,3 +18,21 @@ services:
       - lan
     # environment:
     #   - TZ=Asia/Shanghai
+
+  easytier:
+    image: easytier/easytier:latest 
+    hostname: oci-sjc
+    container_name: easytier
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - TZ=Asia/Shanghai
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ${DATA}/easytier/core:/root
+      - /etc/machine-id:/etc/machine-id:ro # 映射宿主机机器码
+    command: --config-server udp://127.0.0.1:22020/abc
