@@ -8,10 +8,13 @@ services:
     entrypoint: easytier-web-embed
     restart: always
     hostname: easytier-web
+    container_name: easytier-web
     volumes:
       - ${DATA}/easytier/web:/app
     ports:
       # - "127.0.0.1:11211:11211"
       - "22020:22020/udp"
+    networks:
+      - lan
     # environment:
     #   - TZ=Asia/Shanghai
