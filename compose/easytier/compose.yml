@@ -1,0 +1,17 @@
+networks:
+  lan:
+      external: true
+
+services:
+  easytier:
+    image: easytier/easytier:latest 
+    entrypoint: easytier-web-embed
+    restart: always
+    hostname: easytier-web
+    volumes:
+      - ${DATA}/easytier/web:/app
+    ports:
+      # - "127.0.0.1:11211:11211"
+      - "22020:22020/udp"
+    # environment:
+    #   - TZ=Asia/Shanghai
