@@ -37,7 +37,7 @@ services:
     volumes:
       # - ${DATA}/easytier/core:/root
       - /etc/machine-id:/etc/machine-id:ro
-    command: --config-server ws://127.0.0.1:8080/user
+    command: --config-server tcp://127.0.0.1:8080/user
 
 
 *   Trying 165.1.X.X:443...
