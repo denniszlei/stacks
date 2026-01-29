@@ -5,7 +5,6 @@ networks:
 services:
   easytier-web:
     image: easytier/easytier:latest 
-    entrypoint: easytier-web-embed
     restart: always
     hostname: easytier-web
     container_name: easytier-web
@@ -13,11 +12,18 @@ services:
       - ${DATA}/easytier/web:/app
     ports:
       # - "127.0.0.1:11211:11211"
-      - "22020:22020/udp"
+      # - "22020:22020/udp"
+      - "8000:8000"
     networks:
       - lan
     # environment:
     #   - TZ=Asia/Shanghai
+    entrypoint: easytier-web-embed
+    command: >
+      --config-server-protocol ws
+      --config-server-port 8000
+      # 可选：指定 API 监听地址（如果前端访问有问题）
+      # --api-host "http://0.0.0.0:11211"
 
   easytier:
     image: easytier/easytier:latest 
@@ -33,6 +39,6 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     volumes:
-      - ${DATA}/easytier/core:/root
-      - /etc/machine-id:/etc/machine-id:ro # 映射宿主机机器码
+      # - ${DATA}/easytier/core:/root
+      - /etc/machine-id:/etc/machine-id:ro
     command: --config-server udp://127.0.0.1:22020/user
