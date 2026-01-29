@@ -13,7 +13,7 @@ services:
     ports:
       # - "127.0.0.1:11211:11211"
       # - "22020:22020/udp"
-      - "8000:8000"
+      - "8080:8080"
     networks:
       - lan
     # environment:
@@ -21,7 +21,7 @@ services:
     entrypoint: easytier-web-embed
     command: >
       --config-server-protocol ws
-      --config-server-port 8000
+      --config-server-port 8080
       # 可选：指定 API 监听地址（如果前端访问有问题）
       # --api-host "http://0.0.0.0:11211"
 
@@ -41,4 +41,4 @@ services:
     volumes:
       # - ${DATA}/easytier/core:/root
       - /etc/machine-id:/etc/machine-id:ro
-    command: --config-server udp://127.0.0.1:22020/user
+    command: --config-server ws://127.0.0.1:8080/user
