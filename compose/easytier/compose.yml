@@ -19,7 +19,7 @@ services:
     # environment:
     #   - TZ=Asia/Shanghai
     entrypoint: easytier-web-embed
-    command: ' --config-server-protocol ws --config-server-port 8080'
+    command: ' --config-server-protocol tcp --config-server-port 8080'
 
   easytier:
     image: easytier/easytier:latest 
@@ -38,3 +38,68 @@ services:
       # - ${DATA}/easytier/core:/root
       - /etc/machine-id:/etc/machine-id:ro
     command: --config-server ws://127.0.0.1:8080/user
+
+
+*   Trying 165.1.X.X:443...
+* Connected to et-config.mydomain.org (165.1.x.x) port 443 (#0)
+* ALPN: offers h2,http/1.1
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=mydomain.org
+*  start date: Dec 22 05:17:19 2025 GMT
+*  expire date: Mar 22 05:17:18 2026 GMT
+*  subjectAltName: host "et-config.mydomain.org" matched cert's "*.mydomain.org"
+*  issuer: C=US; O=Let's Encrypt; CN=E7
+*  SSL certificate verify ok.
+* using HTTP/2
+* h2h3 [:method: GET]
+* h2h3 [:path: /user]
+* h2h3 [:scheme: https]
+* h2h3 [:authority: et-config.mydomain.org]
+* h2h3 [user-agent: curl/7.88.1]
+* h2h3 [accept: */*]
+* h2h3 [sec-websocket-version: 13]
+* h2h3 [sec-websocket-key: dGhlIHNhbXBsZSBub25jZQ==]
+* h2h3 [sec-websocket-protocol: easytier]
+* Using Stream ID: 1 (easy handle 0x5569a28a8c80)
+> GET /user HTTP/2
+> Host: et-config.mydomain.org
+> user-agent: curl/7.88.1
+> accept: */*
+> connection: Upgrade
+> upgrade: websocket
+> sec-websocket-version: 13
+> sec-websocket-key: dGhlIHNhbXBsZSBub25jZQ==
+> sec-websocket-protocol: easytier
+>
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+* old SSL session ID is stale, removing
+< HTTP/2 400
+HTTP/2 400
+< date: Thu, 29 Jan 2026 04:30:03 GMT
+date: Thu, 29 Jan 2026 04:30:03 GMT
+< x-dns-prefetch-control: off
+x-dns-prefetch-control: off
+< x-content-type-options: nosniff
+x-content-type-options: nosniff
+< x-permitted-cross-domain-policies: none
+x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+referrer-policy: strict-origin-when-cross-origin
+< x-frame-options: SAMEORIGIN
+x-frame-options: SAMEORIGIN
+
+<
+* Connection #0 to host et-config.mydomain.org left intact
