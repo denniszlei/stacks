@@ -19,7 +19,7 @@ services:
     # environment:
     #   - TZ=Asia/Shanghai
     entrypoint: easytier-web-embed
-    command: `--config-server-protocol ws --config-server-port 8080`
+    command: ' --config-server-protocol ws --config-server-port 8080'
 
   easytier:
     image: easytier/easytier:latest 
