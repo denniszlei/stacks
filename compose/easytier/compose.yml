@@ -19,11 +19,7 @@ services:
     # environment:
     #   - TZ=Asia/Shanghai
     entrypoint: easytier-web-embed
-    command: >
-      --config-server-protocol ws
-      --config-server-port 8080
-      # 可选：指定 API 监听地址（如果前端访问有问题）
-      # --api-host "http://0.0.0.0:11211"
+    command: `--config-server-protocol ws --config-server-port 8080`
 
   easytier:
     image: easytier/easytier:latest 
