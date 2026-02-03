@@ -79,7 +79,13 @@ services:
       - ${DATA}/grok2api:/app/data
       - ${DATA}/grok2api/logs:/app/logs
     environment:
-      - STORAGE_MODE=file
+      # - STORAGE_MODE=file
+      TZ: Asia/Shanghai
+      LOG_LEVEL: INFO
+      SERVER_PORT: 8000
+      SERVER_WORKERS: 1
+      SERVER_STORAGE_TYPE: local
+      
     networks:
       - lan
     restart: always
