@@ -3,6 +3,27 @@ networks:
       external: true
 
 services:
+  
+    aiclient2api:
+    image: justlikemaki/aiclient-2-api:latest
+    container_name: aiclient2api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "8085-8087:8085-8087" 
+      - "1455:1455"
+      - "19876-19880:19876-19880"
+    volumes:
+      - ${DATA}/aiclient2api/configs:/app/configs
+    environment:
+      - ARGS=
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+  
   aistudio2api:
     # image: hkfires/aistudiobuildws:latest
     build: https://github.com/hkfires/AIStudioBuildWS.git
@@ -89,62 +110,3 @@ services:
     networks:
       - lan
     restart: always
-
-  # qwen2api:
-  #   container_name: qwen2api
-  #   image: rfym21/qwen2api:latest
-  #   restart: always
-  #   # ports:
-  #   #   - "3000:3000"
-  #   networks:
-  #     - lan
-  #   volumes:
-  #     #- ./qwen2api/data/data.json:/app/data/data.json
-  #     - ./qwen2api/logs:/app/logs
-  #     - ./qwen2api/caches:/app/caches
-  #   environment:
-  #     - SERVICE_PORT=3000
-  #     - API_KEY=${API_KEY}
-  #     # - LISTEN_ADDRESS=
-  #     # - PM2_INSTANCES=1
-  #     # - PM2_MAX_MEMORY=1G
-  #     # 搜索信息展示模式
-  #     # table: 使用折叠块和表格展示
-  #     # text: 使用纯文本
-  #     - SEARCH_INFO_MODE=table
-  #     # 是否输出思考过程
-  #     - OUTPUT_THINK=true
-  #     # 简化模型映射 (true: 只返回基础模型, false: 返回完整模型列表)
-  #     - SIMPLE_MODEL_MAP=false
-  #     # redis 连接地址(如果使用redis模式，则必填，当redis使用tls时将redis://替换为rediss://)
-  #     # - REDIS_URL=
-  #     # 数据保存模式
-  #     - DATA_SAVE_MODE=none
-  #     # 账号(如果使用redis和file模式，则不需要填写)
-  #     - ACCOUNTS=${ACCOUNTS}
-  #     # 图片缓存
-  #     - CACHE_MODE=file
-
-  # zai2api:
-  #   image: zyphrzero/z-ai2api-python:latest
-  #   container_name: zai2api
-  #   ports:
-  #     - "18080:8080"
-  #   networks:
-  #     - lan
-  #   # env_file:
-  #   #   - ./zai2api/.env
-  #   volumes:
-  #     - ./zai2api/data:/app/data
-  #     - ./zai2api/logs:/app/logs
-  #   environment:
-  #     - ADMIN_PASSWORD=admin123
-  #     - AUTH_TOKEN=sk-05123503
-  #     - SKIP_AUTH_TOKEN=false
-  #     - DEBUG_LOGGING=true
-  #     - ANONYMOUS_MODE=true
-  #     - TOOL_SUPPORT=true
-  #     - SCAN_LIMIT=200000
-  #     - DB_PATH=/app/data/tokens.db    
-  #   restart: unless-stopped
-
