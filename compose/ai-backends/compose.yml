@@ -4,7 +4,7 @@ networks:
 
 services:
   
-    aiclient2api:
+  aiclient2api:
     image: justlikemaki/aiclient-2-api:latest
     container_name: aiclient2api
     restart: unless-stopped
