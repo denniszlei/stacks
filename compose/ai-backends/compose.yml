@@ -13,6 +13,8 @@ services:
       - "8085-8087:8085-8087" 
       - "1455:1455"
       - "19876-19880:19876-19880"
+    networks:
+      - lan
     volumes:
       - ${DATA}/aiclient2api/configs:/app/configs
     environment:
