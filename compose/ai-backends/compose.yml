@@ -70,7 +70,8 @@ services:
 
   grok2api:
     # image: 'tomiya233/grok2api:latest'
-    build: https://github.com/Tomiya233/grok2api.git
+    # build: https://github.com/Tomiya233/grok2api.git
+    image: ghcr.io/chenyme/grok2api:latest
     container_name: grok2api    
     # ports:
     #   - "18000:8000"
