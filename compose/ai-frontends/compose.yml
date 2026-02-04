@@ -64,7 +64,6 @@ services:
       - "3005:3000"
     environment:
       - NODE_ENV=production
-      - HOSTNAME=uni.zlei.org/uniweb
       - PORT=3000
       # 以下为容器内的路径，与 volumes 挂载点对应
       - API_YAML_PATH=/app/config/api.yaml
@@ -87,7 +86,6 @@ services:
     #   - gpt-load.env
     environment:
       - AUTH_KEY=${GPTLOAD_AUTH_KEY}
-      - HOST=uni.zlei.org/gptload
     restart: always
     volumes:
       - ${DATA}/gptload:/app/data
