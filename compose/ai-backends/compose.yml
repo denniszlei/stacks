@@ -8,7 +8,10 @@ services:
     image: ghcr.io/su-kaka/gcli2api:latest
     container_name: gcli2api
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - "7861:7861"
+    networks:
+      - lan
     environment:
       - PORT=7861
       # 或使用分离密码（推荐用于生产环境）
