@@ -4,7 +4,7 @@ networks:
 
 services:
   
-    gcli2api:
+  gcli2api:
     image: ghcr.io/su-kaka/gcli2api:latest
     container_name: gcli2api
     restart: unless-stopped
