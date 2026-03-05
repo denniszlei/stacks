@@ -3,6 +3,21 @@ networks:
       external: true
 
 services:
+  axonhub:
+    image: looplj/axonhub:latest
+    networks:
+      - lan    
+    # ports:
+    #   - "8090:8090"
+    volumes:
+      - ${DATA}/axonhub/config.yml:/app/config.yml
+      - ${DATA}/axonhub/data:/app/data
+    environment:
+      - AXONHUB_SERVER_PORT=8090
+      - AXONHUB_DB_DIALECT=sqlite3
+      - AXONHUB_DB_DSN=file:axonhub.db?cache=shared&_fk=1
+    restart: unless-stopped
+
   unifiedllm:
     container_name: unifiedllm
     image: ghcr.io/denniszlei/unifiedllm:latest
@@ -96,6 +111,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+
 
   # octopus:
   #   image: bestrui/octopus
