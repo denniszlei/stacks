@@ -16,14 +16,14 @@ services:
     environment:
       - AXONHUB_SERVER_PORT=8090
       - AXONHUB_DB_DIALECT=sqlite3
-      - AXONHUB_DB_DSN=file:/data/axonhub.db?cache=shared&_fk=1
+      - AXONHUB_DB_DSN=file:/app/data/axonhub.db?cache=shared&_fk=1
     restart: unless-stopped
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:8090/health
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    # healthcheck:
+    #   test: wget --no-verbose --tries=1 --spider http://localhost:8090/health
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 40s
 
   unifiedllm:
     container_name: unifiedllm
