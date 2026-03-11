@@ -8,6 +8,8 @@ services:
     image: ghcr.io/cjackhwang/ds2api:latest
     container_name: ds2api
     restart: always
+    networks:
+      - lan
     ports:
       - "5001:5001"
     volumes:
