@@ -4,6 +4,20 @@ networks:
 
 services:
   
+  ds2api:
+    image: ghcr.io/cjackhwang/ds2api:latest
+    container_name: ds2api
+    restart: always
+    ports:
+      - "5001:5001"
+    volumes:
+      - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
+      # - ./.env:/app/.env                  # 环境变量
+    environment:
+      - TZ=Asia/Shanghai
+      - LOG_LEVEL=INFO
+      - DS2API_ADMIN_KEY=${DS2API_ADMIN_KEY:-ds2api}
+
   gcli2api:
     image: ghcr.io/su-kaka/gcli2api:latest
     container_name: gcli2api
@@ -26,26 +40,26 @@ services:
     #   retries: 3
     #   start_period: 40s
 
-  # aistudio2api:
-  #   # image: hkfires/aistudiobuildws:latest
-  #   build: https://github.com/hkfires/AIStudioBuildWS.git
-  #   container_name: aistudio2api
-  #   environment:
-  #     - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
-  #     - CAMOUFOX_PROXY=${AIBUILD_PROXY}
-  #   volumes:
-  #     - ${DATA}/buildws/cookies:/app/cookies:rw
-  #     - ${DATA}/buildws/logs:/app/logs:rw
-  #   restart: always
-  #   networks:
-  #     - lan
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '2'       # 限制最多使用 2 个 CPU 核心
-  #         memory: 4G        # 限制内存最大为 2GB
-  #       reservations:
-  #         memory: 2G      # 保证至少分配 512M 内存
+  aistudio2api:
+    # image: hkfires/aistudiobuildws:latest
+    build: https://github.com/hkfires/AIStudioBuildWS.git
+    container_name: aistudio2api
+    environment:
+      - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
+      - CAMOUFOX_PROXY=${AIBUILD_PROXY}
+    volumes:
+      - ${DATA}/buildws/cookies:/app/cookies:rw
+      - ${DATA}/buildws/logs:/app/logs:rw
+    restart: always
+    networks:
+      - lan
+    deploy:
+      resources:
+        limits:
+          cpus: '2'       # 限制最多使用 2 个 CPU 核心
+          memory: 4G        # 限制内存最大为 2GB
+        reservations:
+          memory: 2G      # 保证至少分配 512M 内存
 
   cli-proxy-api:
     image: eceasy/cli-proxy-api:latest
