@@ -25,42 +25,42 @@ services:
     #   retries: 3
     #   start_period: 40s
 
-  unifiedllm:
-    container_name: unifiedllm
-    image: ghcr.io/denniszlei/unifiedllm:latest
-    # ports:
-    #   - "18002:8000"
-    environment:
-      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
-      - GPTLOAD_URL=${UNI-GPTLOAD_URL}
-      - GPTLOAD_AUTH_KEY=${UNI-GPTLOAD_AUTH_KEY}
-      - DATABASE_URL=sqlite:///./data/llm_manager.db
-      - APP_HOST=0.0.0.0
-      - APP_PORT=8000
-    volumes:
-      # Persist database
-      - ${DATA}/unillm-data:/app/data
-      # Share uni-api config
-      - ${DATA}/unillm-uniapi:/app/uni-api-config
-    networks:
-      - lan
-    restart: unless-stopped
+  # unifiedllm:
+  #   container_name: unifiedllm
+  #   image: ghcr.io/denniszlei/unifiedllm:latest
+  #   # ports:
+  #   #   - "18002:8000"
+  #   environment:
+  #     - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+  #     - GPTLOAD_URL=${UNI-GPTLOAD_URL}
+  #     - GPTLOAD_AUTH_KEY=${UNI-GPTLOAD_AUTH_KEY}
+  #     - DATABASE_URL=sqlite:///./data/llm_manager.db
+  #     - APP_HOST=0.0.0.0
+  #     - APP_PORT=8000
+  #   volumes:
+  #     # Persist database
+  #     - ${DATA}/unillm-data:/app/data
+  #     # Share uni-api config
+  #     - ${DATA}/unillm-uniapi:/app/uni-api-config
+  #   networks:
+  #     - lan
+  #   restart: unless-stopped
 
-  unillm-gptload:
-    image: ghcr.io/tbphp/gpt-load:latest
-    container_name: unillm-gptload
-    ports:
-      - "3002:3001"
-    environment:
-      - AUTH_KEY=${UNI-GPTLOAD_AUTH_KEY}
-      - PORT=3001
-      # - DATABASE_URL=sqlite:///./data/gptload.db
-    volumes:
-      # Persist GPT-Load database and configuration
-      - ${DATA}/unillm-gptload:/app/data
-    networks:
-      - lan
-    restart: unless-stopped
+  # unillm-gptload:
+  #   image: ghcr.io/tbphp/gpt-load:latest
+  #   container_name: unillm-gptload
+  #   ports:
+  #     - "3002:3001"
+  #   environment:
+  #     - AUTH_KEY=${UNI-GPTLOAD_AUTH_KEY}
+  #     - PORT=3001
+  #     # - DATABASE_URL=sqlite:///./data/gptload.db
+  #   volumes:
+  #     # Persist GPT-Load database and configuration
+  #     - ${DATA}/unillm-gptload:/app/data
+  #   networks:
+  #     - lan
+  #   restart: unless-stopped
 
   uni-api:
     container_name: uni-api
@@ -81,7 +81,7 @@ services:
     image: ghcr.io/melosbot/uni-api-status:latest
     restart: unless-stopped
     networks:
-      - lan    
+      - lan
     ports:
       - "3005:3000"
     environment:
@@ -119,16 +119,4 @@ services:
       retries: 3
       start_period: 40s
 
-
-
-  # octopus:
-  #   image: bestrui/octopus
-  #   ports:
-  #      - '18080:8080'
-  #   volumes:      
-  #      - './octopus:/app/data'
-  #   container_name: octopus
-  #   restart: unless-stopped
-  #   networks:
-  #     - lan
 

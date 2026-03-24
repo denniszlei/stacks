@@ -4,49 +4,49 @@ networks:
 
 services:
 
-  qinglong:
-    image: whyour/qinglong:latest # 基于 Debian 的版本：whyour/qinglong:debian  
-    container_name: qinglong
-    volumes:
-      - ${DATA}/qinglong:/ql/data
-    networks:
-      - lan
-    # ports:
-    #   - "5700:5700"
-    # environment:
-    #   QlBaseUrl: '/' # 部署路径非必须，以斜杠开头和结尾，比如 /test/
-    restart: always
+  # qinglong:
+  #   image: whyour/qinglong:latest # 基于 Debian 的版本：whyour/qinglong:debian  
+  #   container_name: qinglong
+  #   volumes:
+  #     - ${DATA}/qinglong:/ql/data
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "5700:5700"
+  #   # environment:
+  #   #   QlBaseUrl: '/' # 部署路径非必须，以斜杠开头和结尾，比如 /test/
+  #   restart: always
 
-  mealie:
-    image: ghcr.io/mealie-recipes/mealie:latest
-    container_name: mealie
-    restart: always
-    # ports:
-    #     - "9000:9000"
-    networks:
-      - lan
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-    volumes:
-      - ${DATA}/mealie:/app/data/
-    environment:
-      # Set Backend ENV Variables Here
-      ALLOW_SIGNUP: "true"
-      PUID: 1000
-      PGID: 1000
-      TZ: Asia/Shanghai
-      BASE_URL: https://cook.zlei.org
+  # mealie:
+  #   image: ghcr.io/mealie-recipes/mealie:latest
+  #   container_name: mealie
+  #   restart: always
+  #   # ports:
+  #   #     - "9000:9000"
+  #   networks:
+  #     - lan
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 1000M
+  #   volumes:
+  #     - ${DATA}/mealie:/app/data/
+  #   environment:
+  #     # Set Backend ENV Variables Here
+  #     ALLOW_SIGNUP: "true"
+  #     PUID: 1000
+  #     PGID: 1000
+  #     TZ: Asia/Shanghai
+  #     BASE_URL: https://cook.zlei.org
 
-  subconverter:
-    image: 'asdlokj1qpi23/subconverter:latest'
-    container_name: subconverter
-    networks:
-      - lan
-    ports:
-      - "25500:25500"
-    restart: unless-stopped
+  # subconverter:
+  #   image: 'asdlokj1qpi23/subconverter:latest'
+  #   container_name: subconverter
+  #   networks:
+  #     - lan
+  #   ports:
+  #     - "25500:25500"
+  #   restart: unless-stopped
 
   it-tools:
     image: 'corentinth/it-tools:latest'
