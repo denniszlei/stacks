@@ -18,15 +18,15 @@ services:
       - ADMIN_PASSWORD=${ZAI2API_ADMIN_PW}
       - AUTH_TOKEN=${ZAI2API_API_TOKEN}
       - SKIP_AUTH_TOKEN=false
-      - DEBUG_LOGGING=false
-      - ANONYMOUS_MODE=true
+      - DEBUG_LOGGING=true
+      - ANONYMOUS_MODE=false
       # Function Call 功能开关
       - TOOL_SUPPORT=true
       # 工具调用扫描限制(字符数)
       - SCAN_LIMIT=200000
       # 数据库路径 - 使用持久化卷
       - DB_PATH=/app/data/tokens.db
-      - SOCKS5_PROXY=socks5://wsocks:9091
+      # - SOCKS5_PROXY=socks5://wsocks:9091
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/v1/models"]
