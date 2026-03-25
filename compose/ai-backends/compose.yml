@@ -5,7 +5,7 @@ networks:
 services:
 
   zai2api:
-    image: ghcr.io/cjackhwang/ds2api:latest
+    image: zyphrzero/z-ai2api-python:latest
     container_name: zai2api
     networks:
       - lan
