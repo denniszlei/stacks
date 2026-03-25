@@ -3,7 +3,37 @@ networks:
       external: true
 
 services:
-  
+
+  zai2api:
+    image: ghcr.io/cjackhwang/ds2api:latest
+    container_name: zai2api
+    networks:
+      - lan
+    # ports:
+    #   - "8080:8080"
+    volumes:
+      - ${DATA}/zai2api/data:/app/data
+      - ${DATA}/zai2api/logs:/app/logs
+    environment:
+      - ADMIN_PASSWORD=${ZAI2API_ADMIN_PW}
+      - AUTH_TOKEN=${ZAI2API_API_TOKEN}
+      - SKIP_AUTH_TOKEN=false
+      - DEBUG_LOGGING=false
+      - ANONYMOUS_MODE=true
+      # Function Call 功能开关
+      - TOOL_SUPPORT=true
+      # 工具调用扫描限制(字符数)
+      - SCAN_LIMIT=200000
+      # 数据库路径 - 使用持久化卷
+      - DB_PATH=/app/data/tokens.db
+      - SOCKS5_PROXY=socks5://wsocks:9091
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   ds2api:
     image: ghcr.io/cjackhwang/ds2api:latest
     container_name: ds2api
@@ -83,7 +113,7 @@ services:
 
   gemini-fastapi:
     image: ghcr.io/luuquangvu/gemini-fastapi:latest
-    container_name: gemini-fastapi    
+    container_name: gemini-fastapi
     # ports:
     #   - "18001:8000"
     networks:
@@ -112,7 +142,7 @@ services:
     # image: 'tomiya233/grok2api:latest'
     # build: https://github.com/Tomiya233/grok2api.git
     image: ghcr.io/chenyme/grok2api:latest
-    container_name: grok2api    
+    container_name: grok2api
     # ports:
     #   - "18000:8000"
     volumes:
@@ -125,7 +155,6 @@ services:
       SERVER_PORT: 8000
       SERVER_WORKERS: 1
       SERVER_STORAGE_TYPE: local
-      
     networks:
       - lan
     restart: always
