@@ -21,7 +21,7 @@ services:
       - ZAI_SIGNING_SECRET="my-super-secrect"
       - DEFAULT_STREAM="true"
       - DASHBOARD_ENABLED="true"
-      - PORT="9090"
+      # - PORT="9090"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9090/v1/models"]
