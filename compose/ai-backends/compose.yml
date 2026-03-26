@@ -4,32 +4,27 @@ networks:
 
 services:
 
-  zai2api:
-    image: zyphrzero/z-ai2api-python:latest
+  z2api:
+    build: https://github.com/sarices/ZtoApi.git
     container_name: zai2api
     networks:
       - lan
     # ports:
-    #   - "8080:8080"
+    #   - "9090:9090"
     volumes:
       - ${DATA}/zai2api/data:/app/data
       - ${DATA}/zai2api/logs:/app/logs
     environment:
-      - ADMIN_PASSWORD=${ZAI2API_ADMIN_PW}
-      - AUTH_TOKEN=${ZAI2API_API_TOKEN}
-      - SKIP_AUTH_TOKEN=false
-      - DEBUG_LOGGING=true
-      - ANONYMOUS_MODE=false
-      # Function Call 功能开关
-      - TOOL_SUPPORT=true
-      # 工具调用扫描限制(字符数)
-      - SCAN_LIMIT=200000
-      # 数据库路径 - 使用持久化卷
-      - DB_PATH=/app/data/tokens.db
-      # - SOCKS5_PROXY=socks5://wsocks:9091
+      - DEFAULT_KEY=${ZAI2API_API_TOKEN}
+      - ZAI_TOKENS=${ZAI_TOKENS}
+      - DEBUG_MODE=true
+      - ZAI_SIGNING_SECRET="my-super-secrect"
+      - DEFAULT_STREAM="true"
+      - DASHBOARD_ENABLED="true"
+      - PORT="9090"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/models"]
+      test: ["CMD", "curl", "-f", "http://localhost:9090/v1/models"]
       interval: 30s
       timeout: 10s
       retries: 3
