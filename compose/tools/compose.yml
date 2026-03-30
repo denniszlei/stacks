@@ -72,7 +72,7 @@ services:
     networks:
       - lan
     ports:
-      - "19091:1080"
+      - "19091:9091"
     environment:
       - BIND_ADDR=0.0.0.0     # 监听地址 (默认 0.0.0.0)
       - BIND_PORT=9091        # 监听端口 (默认 1080)
