@@ -67,6 +67,7 @@ services:
   wsocks:
     image: ghcr.io/ccbkkb/microwarp:latest
     container_name: wsocks
+    privileged: true
     restart: always
     networks:
         - lan
