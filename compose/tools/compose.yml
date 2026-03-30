@@ -65,7 +65,7 @@ services:
     restart: unless-stopped
 
   wsocks:
-    image: monius/docker-warp-socks:latest
+    image: monius/docker-warp-socks:v5
     container_name: wsocks
     privileged: true
     ports:
