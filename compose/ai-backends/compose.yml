@@ -4,31 +4,6 @@ networks:
 
 services:
 
-  z2api:
-    build: https://github.com/sarices/ZtoApi.git
-    container_name: zai2api
-    networks:
-      - lan
-    # ports:
-    #   - "9090:9090"
-    volumes:
-      - ${DATA}/zai2api/data:/app/data
-      - ${DATA}/zai2api/logs:/app/logs
-    environment:
-      - DEFAULT_KEY=${ZAI2API_API_TOKEN}
-      - ZAI_TOKENS=${ZAI_TOKENS}
-      - DEBUG_MODE=true
-      - ZAI_SIGNING_SECRET="my-super-secrect"
-      - DEFAULT_STREAM="true"
-      - DASHBOARD_ENABLED="true"
-      # - PORT="9090"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9090/v1/models"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   ds2api:
     image: ghcr.io/cjackhwang/ds2api:latest
     container_name: ds2api
@@ -153,3 +128,28 @@ services:
     networks:
       - lan
     restart: always
+
+  # z2api:
+  #   build: https://github.com/sarices/ZtoApi.git
+  #   container_name: zai2api
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "9090:9090"
+  #   volumes:
+  #     - ${DATA}/zai2api/data:/app/data
+  #     - ${DATA}/zai2api/logs:/app/logs
+  #   environment:
+  #     - DEFAULT_KEY=${ZAI2API_API_TOKEN}
+  #     - ZAI_TOKENS=${ZAI_TOKENS}
+  #     - DEBUG_MODE=true
+  #     - ZAI_SIGNING_SECRET="my-super-secrect"
+  #     - DEFAULT_STREAM="true"
+  #     - DASHBOARD_ENABLED="true"
+  #     # - PORT="9090"
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:9090/v1/models"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
