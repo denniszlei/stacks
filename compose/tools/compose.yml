@@ -70,9 +70,16 @@ services:
     privileged: true
     restart: always
     networks:
-        - lan
+      - lan
     ports:
       - "19091:1080"
+    environment:
+      - BIND_ADDR=0.0.0.0     # 监听地址 (默认 0.0.0.0)
+      - BIND_PORT=9091        # 监听端口 (默认 1080)
+      # - SOCKS_USER=admin      # SOCKS5 认证用户名 (留空则为无密码模式)
+      # - SOCKS_PASS=123456     # SOCKS5 认证密码
+      # - GH_PROXY=https://github.ednovas.xyz # 代理 wgcf 二进制下载地址
+      - ENDPOINT_IP=162.159.192.1:4500
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
