@@ -65,28 +65,21 @@ services:
     restart: unless-stopped
 
   wsocks:
-    image: monius/docker-warp-socks:v5
+    image: ghcr.io/ccbkkb/microwarp:latest
     container_name: wsocks
-    privileged: true
-    ports:
-        - "19091:9091"
+    restart: always
     networks:
         - lan
-    # dns:
-    #     - 8.8.8.8
-    #     - 1.1.1.1
+    ports:
+      - "19091:1080"
     cap_add:
-        - NET_ADMIN
-        - SYS_ADMIN
+      - NET_ADMIN
+      - SYS_MODULE
     sysctls:
-        net.ipv6.conf.all.disable_ipv6: 0
-        net.ipv4.conf.all.src_valid_mark: 1
-    healthcheck:
-        test: ["CMD", "curl", "-f", "https://www.cloudflare.com/cdn-cgi/trace"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
-    restart: unless-stopped
+      - net.ipv4.conf.all.src_valid_mark=1
+    volumes:
+      - ${DATA}/microwarp:/etc/wireguard # Keep account data to avoid rate limits
+
 
   vaultwarden:
     image: 'vaultwarden/server:latest'
