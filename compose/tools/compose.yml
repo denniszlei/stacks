@@ -4,40 +4,37 @@ networks:
 
 services:
 
-  # qinglong:
-  #   image: whyour/qinglong:latest # 基于 Debian 的版本：whyour/qinglong:debian  
-  #   container_name: qinglong
-  #   volumes:
-  #     - ${DATA}/qinglong:/ql/data
-  #   networks:
-  #     - lan
-  #   # ports:
-  #   #   - "5700:5700"
-  #   # environment:
-  #   #   QlBaseUrl: '/' # 部署路径非必须，以斜杠开头和结尾，比如 /test/
-  #   restart: always
-
-  # mealie:
-  #   image: ghcr.io/mealie-recipes/mealie:latest
-  #   container_name: mealie
-  #   restart: always
-  #   # ports:
-  #   #     - "9000:9000"
-  #   networks:
-  #     - lan
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 1000M
-  #   volumes:
-  #     - ${DATA}/mealie:/app/data/
-  #   environment:
-  #     # Set Backend ENV Variables Here
-  #     ALLOW_SIGNUP: "true"
-  #     PUID: 1000
-  #     PGID: 1000
-  #     TZ: Asia/Shanghai
-  #     BASE_URL: https://cook.zlei.org
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    # line above must be uncommented to allow external containers to connect.
+    # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    networks:
+      - lan
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+    volumes:
+      - ${DATA}/gluetun:/gluetun
+    environment:
+      # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+      - VPN_SERVICE_PROVIDER=purevpn
+      # - VPN_TYPE=openvpn
+      # OpenVPN:
+      - OPENVPN_USER=${OVPN_USER}
+      - OPENVPN_PASSWORD=${OVPN_PW}
+      - SERVER_COUNTRIES=${OVPN_SVRS}
+      # Timezone for accurate log times
+      - TZ=Asia/Shanghai
+      # Server list updater
+      # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
+      - UPDATER_PERIOD=72h
+      - HTTPPROXY=on
 
   # subconverter:
   #   image: 'asdlokj1qpi23/subconverter:latest'
@@ -64,29 +61,29 @@ services:
       retries: 3
     restart: unless-stopped
 
-  wsocks:
-    image: ghcr.io/ccbkkb/microwarp:latest
-    container_name: wsocks
-    privileged: true
-    restart: always
-    networks:
-      - lan
-    ports:
-      - "19091:9091"
-    environment:
-      - BIND_ADDR=0.0.0.0     # 监听地址 (默认 0.0.0.0)
-      - BIND_PORT=9091        # 监听端口 (默认 1080)
-      # - SOCKS_USER=admin      # SOCKS5 认证用户名 (留空则为无密码模式)
-      # - SOCKS_PASS=123456     # SOCKS5 认证密码
-      # - GH_PROXY=https://github.ednovas.xyz # 代理 wgcf 二进制下载地址
-      - ENDPOINT_IP=162.159.192.1:4500
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-    volumes:
-      - ${DATA}/microwarp:/etc/wireguard # Keep account data to avoid rate limits
+  # wsocks:
+  #   image: ghcr.io/ccbkkb/microwarp:latest
+  #   container_name: wsocks
+  #   privileged: true
+  #   restart: always
+  #   networks:
+  #     - lan
+  #   ports:
+  #     - "19091:9091"
+  #   environment:
+  #     - BIND_ADDR=0.0.0.0     # 监听地址 (默认 0.0.0.0)
+  #     - BIND_PORT=9091        # 监听端口 (默认 1080)
+  #     # - SOCKS_USER=admin      # SOCKS5 认证用户名 (留空则为无密码模式)
+  #     # - SOCKS_PASS=123456     # SOCKS5 认证密码
+  #     # - GH_PROXY=https://github.ednovas.xyz # 代理 wgcf 二进制下载地址
+  #     - ENDPOINT_IP=162.159.192.1:4500
+  #   cap_add:
+  #     - NET_ADMIN
+  #     - SYS_MODULE
+  #   sysctls:
+  #     - net.ipv4.conf.all.src_valid_mark=1
+  #   volumes:
+  #     - ${DATA}/microwarp:/etc/wireguard # Keep account data to avoid rate limits
 
 
   vaultwarden:
