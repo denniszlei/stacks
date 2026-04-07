@@ -110,12 +110,8 @@ services:
       - ADMIN_USER=${CLAUDE_ADMIN_USER}
       - ADMIN_PASS=${CLAUDE_ADMIN_PASS}
       - CLAUDE_API_KEY=${CLAUDE_API_KEY}
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+      - PROXY_HOST=http://gluetun
+      - PROXY_PORT=8888
 
   # gcli2api:
   #   image: ghcr.io/su-kaka/gcli2api:latest
