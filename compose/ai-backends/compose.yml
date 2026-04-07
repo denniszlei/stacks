@@ -20,28 +20,6 @@ services:
       - LOG_LEVEL=INFO
       - DS2API_ADMIN_KEY=${DS2API_ADMIN_KEY:-ds2api}
 
-  gcli2api:
-    image: ghcr.io/su-kaka/gcli2api:latest
-    container_name: gcli2api
-    restart: unless-stopped
-    ports:
-      - "7861:7861"
-    networks:
-      - lan
-    environment:
-      - PORT=7861
-      # 或使用分离密码（推荐用于生产环境）
-      - API_PASSWORD=${GCLI2API_API}
-      - PANEL_PASSWORD=${GCLI2API_PASSWORD}
-    volumes:
-      - ${DATA}/gcli2api/creds:/app/creds
-    # healthcheck:
-    #   test: ["CMD-SHELL", "python -c \"import sys, urllib.request, os; port = os.environ.get('PORT', '7861'); req = urllib.request.Request(f'http://localhost:{port}/v1/models', headers={'Authorization': 'Bearer ' + os.environ.get('PASSWORD', 'pwd')}); sys.exit(0 if urllib.request.urlopen(req, timeout=5).getcode() == 200 else 1)\""]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 40s
-
   aistudio2api:
     # image: hkfires/aistudiobuildws:latest
     build: https://github.com/hkfires/AIStudioBuildWS.git
@@ -97,17 +75,6 @@ services:
       - GEMINI_COOKIE_PATH=/app/cache
     restart: always
 
-  clewdr:
-    image: ghcr.io/xerxes-2/clewdr:latest
-    container_name: clewdr
-    volumes:
-      - ${DATA}/clewdr:/etc/clewdr
-    networks:
-      - lan
-    # ports:
-    #   - "8484:8484"
-    restart: unless-stopped
-
   grok2api:
     # image: 'tomiya233/grok2api:latest'
     # build: https://github.com/Tomiya233/grok2api.git
@@ -129,27 +96,56 @@ services:
       - lan
     restart: always
 
-  # z2api:
-  #   build: https://github.com/sarices/ZtoApi.git
-  #   container_name: zai2api
+  claude2api:
+    image: pushzx/claude2api:latest-arm64
+    container_name: claude2api
+    restart: unless-stopped
+    networks:
+      - lan
+    # ports:
+    #   - "${PORT:-8080}:8080"
+    environment:
+      - LISTEN_ADDR=:8080
+      - CLAUDE_SESSION_KEYS=${CLAUDE_SESSION_KEYS}
+      - ADMIN_USER=${CLAUDE_ADMIN_USER}
+      - ADMIN_PASS=${CLAUDE_ADMIN_PASS}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # gcli2api:
+  #   image: ghcr.io/su-kaka/gcli2api:latest
+  #   container_name: gcli2api
+  #   restart: unless-stopped
+  #   ports:
+  #     - "7861:7861"
+  #   networks:
+  #     - lan
+  #   environment:
+  #     - PORT=7861
+  #     # 或使用分离密码（推荐用于生产环境）
+  #     - API_PASSWORD=${GCLI2API_API}
+  #     - PANEL_PASSWORD=${GCLI2API_PASSWORD}
+  #   volumes:
+  #     - ${DATA}/gcli2api/creds:/app/creds
+  #   # healthcheck:
+  #   #   test: ["CMD-SHELL", "python -c \"import sys, urllib.request, os; port = os.environ.get('PORT', '7861'); req = urllib.request.Request(f'http://localhost:{port}/v1/models', headers={'Authorization': 'Bearer ' + os.environ.get('PASSWORD', 'pwd')}); sys.exit(0 if urllib.request.urlopen(req, timeout=5).getcode() == 200 else 1)\""]
+  #   #   interval: 30s
+  #   #   timeout: 10s
+  #   #   retries: 3
+  #   #   start_period: 40s
+
+  # clewdr:
+  #   image: ghcr.io/xerxes-2/clewdr:latest
+  #   container_name: clewdr
+  #   volumes:
+  #     - ${DATA}/clewdr:/etc/clewdr
   #   networks:
   #     - lan
   #   # ports:
-  #   #   - "9090:9090"
-  #   volumes:
-  #     - ${DATA}/zai2api/data:/app/data
-  #     - ${DATA}/zai2api/logs:/app/logs
-  #   environment:
-  #     - DEFAULT_KEY=${ZAI2API_API_TOKEN}
-  #     - ZAI_TOKENS=${ZAI_TOKENS}
-  #     - DEBUG_MODE=true
-  #     - ZAI_SIGNING_SECRET="my-super-secrect"
-  #     - DEFAULT_STREAM="true"
-  #     - DASHBOARD_ENABLED="true"
-  #     # - PORT="9090"
+  #   #   - "8484:8484"
   #   restart: unless-stopped
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:9090/v1/models"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
