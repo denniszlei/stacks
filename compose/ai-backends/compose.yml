@@ -59,21 +59,21 @@ services:
       - ${DATA}/CLIProxyAPI/logs:/CLIProxyAPI/logs
     restart: unless-stopped
 
-  gemini-fastapi:
-    image: ghcr.io/luuquangvu/gemini-fastapi:latest
-    container_name: gemini-fastapi
-    # ports:
-    #   - "18001:8000"
-    networks:
-      - lan
-    volumes:
-      - ${DATA}/gemini-fastapi/config:/app/config  # Uncomment to use a custom config file
-      # - ${DATA}/certs:/app/certs        # Uncomment to enable HTTPS with your certs
-      - ${DATA}/gemini-fastapi/data:/app/data
-      - ${DATA}/gemini-fastapi/cache:/app/cache
-    environment:
-      - GEMINI_COOKIE_PATH=/app/cache
-    restart: always
+  # gemini-fastapi:
+  #   image: ghcr.io/luuquangvu/gemini-fastapi:latest
+  #   container_name: gemini-fastapi
+  #   # ports:
+  #   #   - "18001:8000"
+  #   networks:
+  #     - lan
+  #   volumes:
+  #     - ${DATA}/gemini-fastapi/config:/app/config  # Uncomment to use a custom config file
+  #     # - ${DATA}/certs:/app/certs        # Uncomment to enable HTTPS with your certs
+  #     - ${DATA}/gemini-fastapi/data:/app/data
+  #     - ${DATA}/gemini-fastapi/cache:/app/cache
+  #   environment:
+  #     - GEMINI_COOKIE_PATH=/app/cache
+  #   restart: always
 
   grok2api:
     # image: 'tomiya233/grok2api:latest'
@@ -112,6 +112,25 @@ services:
       - CLAUDE_API_KEY=${CLAUDE_API_KEY}
       - PROXY_HOST=http://gluetun
       - PROXY_PORT=8888
+
+  gemini-business2api:
+    image: cooooookk/gemini-business2api:latest
+    container_name: gemini-business2api
+    # ports:
+    #   - "7860:7860"
+    volumes:
+      - ${DATA}/business2api:/app/data
+    networks:
+      - lan
+    environment:
+      - ADMIN_KEY=${DS2API_ADMIN_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   # gcli2api:
   #   image: ghcr.io/su-kaka/gcli2api:latest
