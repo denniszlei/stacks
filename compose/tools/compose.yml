@@ -28,7 +28,7 @@ services:
       # OpenVPN:
       - OPENVPN_USER=${OVPN_USER}
       - OPENVPN_PASSWORD=${OVPN_PW}
-      - SERVER_COUNTRIES=${OVPN_SVRS}
+      - SERVER_CITIES=${OVPN_SVRS}
       # Timezone for accurate log times
       - TZ=Asia/Shanghai
       # Server list updater
