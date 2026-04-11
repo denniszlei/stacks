@@ -16,9 +16,9 @@ services:
     networks:
       - lan
     ports:
-      - 8888:8888/tcp # HTTP proxy
-      - 8388:8388/tcp # Shadowsocks
-      - 8388:8388/udp # Shadowsocks
+      - 127.0.0.1:8888:8888/tcp # HTTP proxy
+      # - 8388:8388/tcp # Shadowsocks
+      # - 8388:8388/udp # Shadowsocks
     volumes:
       - ${DATA}/gluetun:/gluetun
     environment:
