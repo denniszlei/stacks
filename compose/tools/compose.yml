@@ -17,6 +17,7 @@ services:
       - lan
     ports:
       - 127.0.0.1:8888:8888/tcp # HTTP proxy
+      - 127.0.0.1:19090:1080
       # - 8388:8388/tcp # Shadowsocks
       # - 8388:8388/udp # Shadowsocks
     volumes:
@@ -39,8 +40,6 @@ services:
   gsocks:
     image: "serjs/go-socks5-proxy:latest"
     container_name: gsocks
-    ports:
-      - "19090:1080"
     depends_on:
       - gluetun
     network_mode: "container:gluetun"
