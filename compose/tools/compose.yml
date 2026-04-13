@@ -43,6 +43,8 @@ services:
     depends_on:
       - gluetun
     network_mode: "container:gluetun"
+    environment:
+      - REQUIRE_AUTH=false
 
   wsocks:
     image: ghcr.io/ccbkkb/microwarp:latest
