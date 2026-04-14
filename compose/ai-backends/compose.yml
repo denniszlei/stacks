@@ -78,7 +78,7 @@ services:
   grok2api:
     # image: 'tomiya233/grok2api:latest'
     # build: https://github.com/Tomiya233/grok2api.git
-    image: ghcr.io/chenyme/grok2api:latest
+    image: ghcr.io/chenyme/grok2api:1.6.0
     container_name: grok2api
     # ports:
     #   - "18000:8000"
@@ -91,7 +91,7 @@ services:
       LOG_LEVEL: INFO
       SERVER_PORT: 8000
       SERVER_WORKERS: 1
-      SERVER_STORAGE_TYPE: local
+      ACCOUNT_STORAGE: local
     networks:
       - lan
     restart: always
