@@ -111,12 +111,13 @@ services:
     environment:
       - SERVICE_PORT=3000
       - API_KEY=${CLAUDE_API_KEY}
+      - PROXY_URL=socks5://gluetun:19090
       - PM2_INSTANCES=1
       - PM2_MAX_MEMORY=1G
       # Search info display mode (table: collapsible tables / text: plain text)
       - SEARCH_INFO_MODE=table
       - OUTPUT_THINK=true
-      - SIMPLE_MODEL_MAP=false
+      - SIMPLE_MODEL_MAP=true
       # 数据保存模式
       # Data save mode (none / file / redis)
       - DATA_SAVE_MODE=file
@@ -126,6 +127,70 @@ services:
       # 图片缓存
       # Image cache mode (default: memory / file: disk)
       - CACHE_MODE=default
+
+  zai2api-pg:
+    image: postgres:16-alpine
+    container_name: zai2api-pg
+    networks:
+      - lan
+    environment:
+      POSTGRES_DB: ${DB_NAME:-zai2api}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      TZ: ${DB_TIMEZONE:-Asia/Shanghai}
+    volumes:
+      - ${DATA}/zai2api/db:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  zai2api-go:
+    image: zai2api-go:latest
+    container_name: zai2api-go
+    networks:
+      - lan
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      PORT: 8080
+      # Production mode will reject weak defaults unless ALLOW_INSECURE_DEFAULTS=true
+      GIN_MODE: ${GIN_MODE:-release}
+      APP_ENV: ${APP_ENV:-production}
+
+      # Required (put them in .env)
+      ADMIN_USERNAME: ${CLAUDE_ADMIN_USER}
+      ADMIN_PASSWORD: ${CLAUDE_ADMIN_PASS}
+      JWT_SECRET: ${JWT_SECRET}
+
+      # Database (defaults are fine for local use; change in production)
+      DB_HOST: zai2api-pg
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-zai2api}
+      DB_TIMEZONE: ${DB_TIMEZONE:-Asia/Shanghai}
+
+      # Optional deployment-specific knobs
+      # CORS_ALLOW_ORIGINS: "https://admin.example.com"
+      # TRUSTED_PROXIES: "127.0.0.1,10.0.0.0/8"
+      # ALLOW_INSECURE_DEFAULTS: "false"
+
+      # Runtime limits now live in the admin settings page and are persisted in Postgres.
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
 
   # gemini-fastapi:
   #   image: ghcr.io/luuquangvu/gemini-fastapi:latest
