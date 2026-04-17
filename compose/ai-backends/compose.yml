@@ -152,7 +152,7 @@ services:
       # # ── 并发（8C8G 拉满） ──
       # - GLOBAL_CONCURRENCY_LIMIT=128
     volumes:
-      - {DATA}/z2api:/app
+      - ${DATA}/zai2api:/app
     command: ["python", "server.py"]
     # ports:
     #   - "30016:30016"
