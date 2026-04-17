@@ -4,22 +4,6 @@ networks:
 
 services:
 
-  ds2api:
-    image: ghcr.io/cjackhwang/ds2api:latest
-    container_name: ds2api
-    restart: always
-    networks:
-      - lan
-    ports:
-      - "5001:5001"
-    volumes:
-      - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
-      # - ./.env:/app/.env                  # 环境变量
-    environment:
-      - TZ=Asia/Shanghai
-      - LOG_LEVEL=INFO
-      - DS2API_ADMIN_KEY=${DS2API_ADMIN_KEY:-ds2api}
-
   aistudio2api:
     # image: hkfires/aistudiobuildws:latest
     build: https://github.com/hkfires/AIStudioBuildWS.git
@@ -59,22 +43,6 @@ services:
       - ${DATA}/CLIProxyAPI/logs:/CLIProxyAPI/logs
     restart: unless-stopped
 
-  # gemini-fastapi:
-  #   image: ghcr.io/luuquangvu/gemini-fastapi:latest
-  #   container_name: gemini-fastapi
-  #   # ports:
-  #   #   - "18001:8000"
-  #   networks:
-  #     - lan
-  #   volumes:
-  #     - ${DATA}/gemini-fastapi/config:/app/config  # Uncomment to use a custom config file
-  #     # - ${DATA}/certs:/app/certs        # Uncomment to enable HTTPS with your certs
-  #     - ${DATA}/gemini-fastapi/data:/app/data
-  #     - ${DATA}/gemini-fastapi/cache:/app/cache
-  #   environment:
-  #     - GEMINI_COOKIE_PATH=/app/cache
-  #   restart: always
-
   grok2api:
     # image: 'tomiya233/grok2api:latest'
     # build: https://github.com/Tomiya233/grok2api.git
@@ -113,24 +81,68 @@ services:
       - PROXY_HOST=http://gluetun
       - PROXY_PORT=8888
 
-  # gemini-business2api:
-  #   image: cooooookk/gemini-business2api:latest
-  #   container_name: gemini-business2api
+  ds2api:
+    image: ghcr.io/cjackhwang/ds2api:latest
+    container_name: ds2api
+    restart: always
+    networks:
+      - lan
+    ports:
+      - "5001:5001"
+    volumes:
+      - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
+      # - ./.env:/app/.env                  # 环境变量
+    environment:
+      - TZ=Asia/Shanghai
+      - LOG_LEVEL=INFO
+      - DS2API_ADMIN_KEY=${DS2API_ADMIN_KEY:-ds2api}
+
+  qwen2api:
+    container_name: qwen2api
+    image: rfym21/qwen2api:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - lan
+    volumes:
+      - ${DATA}/qwen2api/:/app/data
+      - ${DATA}/qwen2api/logs:/app/logs
+    environment:
+      - SERVICE_PORT=3000
+      - API_KEY=${CLAUDE_API_KEY}
+      - PM2_INSTANCES=1
+      - PM2_MAX_MEMORY=1G
+      # Search info display mode (table: collapsible tables / text: plain text)
+      - SEARCH_INFO_MODE=table
+      - OUTPUT_THINK=true
+      - SIMPLE_MODEL_MAP=false
+      # 数据保存模式
+      # Data save mode (none / file / redis)
+      - DATA_SAVE_MODE=file
+      # 账号(如果使用redis和file模式，则不需要填写)
+      # Accounts (not needed for redis/file mode)
+      # - ACCOUNTS=
+      # 图片缓存
+      # Image cache mode (default: memory / file: disk)
+      - CACHE_MODE=default
+
+  # gemini-fastapi:
+  #   image: ghcr.io/luuquangvu/gemini-fastapi:latest
+  #   container_name: gemini-fastapi
   #   # ports:
-  #   #   - "7860:7860"
-  #   volumes:
-  #     - ${DATA}/business2api:/app/data
+  #   #   - "18001:8000"
   #   networks:
   #     - lan
+  #   volumes:
+  #     - ${DATA}/gemini-fastapi/config:/app/config  # Uncomment to use a custom config file
+  #     # - ${DATA}/certs:/app/certs        # Uncomment to enable HTTPS with your certs
+  #     - ${DATA}/gemini-fastapi/data:/app/data
+  #     - ${DATA}/gemini-fastapi/cache:/app/cache
   #   environment:
-  #     - ADMIN_KEY=${DS2API_ADMIN_KEY}
-  #   restart: unless-stopped
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 10s
+  #     - GEMINI_COOKIE_PATH=/app/cache
+  #   restart: always
+
 
   # gcli2api:
   #   image: ghcr.io/su-kaka/gcli2api:latest
