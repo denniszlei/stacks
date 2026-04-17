@@ -131,7 +131,7 @@ services:
   zai-openai:
     build: https://github.com/jiujiu532/z2api.git
     container_name: zai-openai
-    working_dir: /app
+    # working_dir: /app
     environment:
       - LOG_LEVEL=INFO
       - HTTP_DEBUG=0
@@ -151,9 +151,9 @@ services:
       # - POOL_SCALE_DOWN_IDLE_ROUNDS=3
       # # ── 并发（8C8G 拉满） ──
       # - GLOBAL_CONCURRENCY_LIMIT=128
-    volumes:
-      - ${DATA}/zai2api:/app
-    command: ["python", "server.py"]
+    # volumes:
+    #   - ${DATA}/zai2api:/app
+    # command: ["python", "server.py"]
     # ports:
     #   - "30016:30016"
     networks:
