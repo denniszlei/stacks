@@ -111,7 +111,7 @@ services:
     environment:
       - SERVICE_PORT=3000
       - API_KEY=${CLAUDE_API_KEY}
-      - PROXY_URL=socks5://gluetun:19090
+      - PROXY_URL=http://gluetun:8888
       - PM2_INSTANCES=1
       - PM2_MAX_MEMORY=1G
       # Search info display mode (table: collapsible tables / text: plain text)
