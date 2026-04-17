@@ -150,6 +150,7 @@ services:
   zai2api-go:
     image: zai2api-go:latest
     container_name: zai2api-go
+    pull_policy: never
     networks:
       - lan
     ports:
