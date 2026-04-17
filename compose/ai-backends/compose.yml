@@ -181,7 +181,7 @@ services:
       # Runtime limits now live in the admin settings page and are persisted in Postgres.
 
     depends_on:
-      postgres:
+      zai2api-pg:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
