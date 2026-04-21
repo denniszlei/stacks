@@ -4,26 +4,44 @@ networks:
 
 services:
 
+  # aistudio2api:
+  #   # image: hkfires/aistudiobuildws:latest
+  #   build: https://github.com/hkfires/AIStudioBuildWS.git
+  #   container_name: aistudio2api
+  #   environment:
+  #     - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
+  #     - CAMOUFOX_PROXY=${AIBUILD_PROXY}
+  #   volumes:
+  #     - ${DATA}/buildws/cookies:/app/cookies:rw
+  #     - ${DATA}/buildws/logs:/app/logs:rw
+  #   restart: always
+  #   networks:
+  #     - lan
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '2'       # 限制最多使用 2 个 CPU 核心
+  #         memory: 4G        # 限制内存最大为 2GB
+  #       reservations:
+  #         memory: 2G      # 保证至少分配 512M 内存
+
   aistudio2api:
-    # image: hkfires/aistudiobuildws:latest
-    build: https://github.com/hkfires/AIStudioBuildWS.git
+    image: ghcr.io/ibuhub/aistudio-to-api:latest
     container_name: aistudio2api
-    environment:
-      - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
-      - CAMOUFOX_PROXY=${AIBUILD_PROXY}
-    volumes:
-      - ${DATA}/buildws/cookies:/app/cookies:rw
-      - ${DATA}/buildws/logs:/app/logs:rw
-    restart: always
     networks:
       - lan
-    deploy:
-      resources:
-        limits:
-          cpus: '2'       # 限制最多使用 2 个 CPU 核心
-          memory: 4G        # 限制内存最大为 2GB
-        reservations:
-          memory: 2G      # 保证至少分配 512M 内存
+    # ports:
+    #   - 7860:7860
+    restart: unless-stopped
+    volumes:
+      - ${DATA}/aistudio2api/auth:/app/configs/auth
+      - ${DATA}/aistudio2api/data:/app/data
+    environment:
+      API_KEYS: ${CLAUDE_API_KEY}
+      TZ: Asia/Shanghai
+      WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
+      WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
+      HTTP_PROXY: ${HTTP_PROXY}
 
   cli-proxy-api:
     image: eceasy/cli-proxy-api:latest
@@ -94,7 +112,7 @@ services:
       - AUTH_TOKENS=${FREEBUFF_AUTH_TOKENS}
       # - UPSTREAM_BASE_URL=https://codebuff.com
       - API_KEYS=${CLAUDE_API_KEY}
-      - HTTP_PROXY=http://gluetun:8888
+      - HTTP_PROXY=${HTTP_PROXY}
 
   ds2api:
     image: ghcr.io/cjackhwang/ds2api:latest
@@ -126,7 +144,7 @@ services:
     environment:
       - SERVICE_PORT=3000
       - API_KEY=${CLAUDE_API_KEY}
-      - PROXY_URL=http://gluetun:8888
+      - PROXY_URL=${HTTP_PROXY}
       - PM2_INSTANCES=1
       - PM2_MAX_MEMORY=1G
       # Search info display mode (table: collapsible tables / text: plain text)
