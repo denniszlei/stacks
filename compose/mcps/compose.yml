@@ -6,6 +6,7 @@ services:
 
   mysearch-proxy:
     image: skernelx/mysearch-proxy:latest
+    container_name: mysearch-proxy
     ports:
       - "9874:9874"
     networks:
