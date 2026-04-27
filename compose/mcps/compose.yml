@@ -17,4 +17,14 @@ services:
       - ${DATA}/mysearch/proxy:/app/data
     restart: unless-stopped
 
-
+  mysearch-mcp:
+    image: mysearch-mcp:latest
+    container_name: mysearch-mcp
+    ports:
+      - "8000:8000"
+    networks:
+      - lan
+    environment:
+      - MYSEARCH_PROXY_BASE_URL=${MYSEARCH_URL}
+      - MYSEARCH_PROXY_API_KEY=${MYSEARCH_API}
+    restart: unless-stopped
