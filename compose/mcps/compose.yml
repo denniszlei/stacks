@@ -1,0 +1,19 @@
+networks:
+  lan:
+      external: true
+
+services:
+
+  mysearch-proxy:
+    image: skernelx/mysearch-proxy:latest
+    ports:
+      - "9874:9874"
+    networks:
+      - lan
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PW}
+    volumes:
+      - ${DATA}/mysearch/proxy:/app/data
+    restart: unless-stopped
+
+
