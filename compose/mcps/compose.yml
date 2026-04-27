@@ -21,8 +21,8 @@ services:
     image: mysearch-mcp:latest
     pull_policy: never
     container_name: mysearch-mcp
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     networks:
       - lan
     environment:
