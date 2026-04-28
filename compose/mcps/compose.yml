@@ -17,15 +17,34 @@ services:
       - ${DATA}/mysearch/proxy:/app/data
     restart: unless-stopped
 
-  mysearch-mcp:
-    image: mysearch-mcp:latest
-    pull_policy: never
-    container_name: mysearch-mcp
-    # ports:
-    #   - "8000:8000"
+  # mysearch-mcp:
+  #   image: mysearch-mcp:latest
+  #   pull_policy: never
+  #   container_name: mysearch-mcp
+  #   # ports:
+  #   #   - "8000:8000"
+  #   networks:
+  #     - lan
+  #   environment:
+  #     - MYSEARCH_PROXY_BASE_URL=${MYSEARCH_URL}
+  #     - MYSEARCH_PROXY_API_KEY=${MYSEARCH_API}
+  #   restart: unless-stopped
+
+  grok-search:
+    image: ghcr.io/denniszlei/groksearch:latest
+    container_name: grok-search
+    restart: unless-stopped
     networks:
       - lan
+    # ports:
+    #   - "8000:8000"
     environment:
-      - MYSEARCH_PROXY_BASE_URL=${MYSEARCH_URL}
-      - MYSEARCH_PROXY_API_KEY=${MYSEARCH_API}
-    restart: unless-stopped
+      GROK_API_URL: ${GR_API_URL}
+      GROK_MODEL: "grok-4.20-fast"
+      GROK_API_KEY: ${GR_API_KEY}
+      TAVILY_API_KEY: ${TVL_API_KEY}
+      TAVILY_API_URL: ${TVL_API_URL}
+      FIRECRAWL_API_KEY: ${FC_API_KEY}
+      FIRECRAWL_API_URL: ${FC_API_URL}
+    # volumes:
+    #   - grok-search-data:/data
