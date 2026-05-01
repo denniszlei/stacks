@@ -1,13 +1,41 @@
 networks:
   lan:
-      external: true
+    external: true
 
 services:
+  lens:
+    # image: ghcr.io/dyedd/lens:latest
+    build: https://github.com/dyedd/lens.git
+    container_name: lens
+    environment:
+      - LENS_HOST=0.0.0.0
+      - LENS_PORT=3000
+      - LENS_DATABASE_URL=sqlite+aiosqlite:////app/data/data.db
+      - LENS_UI_STATIC_DIR=/app/ui
+    networks:
+      - lan
+    # ports:
+    #   - "3000:3000"
+    volumes:
+      - ${DATA}/lens:/app/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/healthz', timeout=5)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
   axonhub:
     image: looplj/axonhub:latest
     container_name: axonhub
     networks:
-      - lan    
+      - lan
     # ports:
     #   - "8090:8090"
     volumes:
@@ -118,5 +146,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-
