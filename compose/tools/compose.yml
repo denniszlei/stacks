@@ -1,11 +1,10 @@
 networks:
   lan:
-      external: true
+    external: true
 
 services:
-
   gluetun:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:v3.41
     container_name: gluetun
     # line above must be uncommented to allow external containers to connect.
     # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
@@ -56,8 +55,8 @@ services:
     ports:
       - "19091:9091"
     environment:
-      - BIND_ADDR=0.0.0.0     # 监听地址 (默认 0.0.0.0)
-      - BIND_PORT=9091        # 监听端口 (默认 1080)
+      - BIND_ADDR=0.0.0.0 # 监听地址 (默认 0.0.0.0)
+      - BIND_PORT=9091 # 监听端口 (默认 1080)
       # - SOCKS_USER=admin      # SOCKS5 认证用户名 (留空则为无密码模式)
       # - SOCKS_PASS=123456     # SOCKS5 认证密码
       # - GH_PROXY=https://github.ednovas.xyz # 代理 wgcf 二进制下载地址
@@ -70,7 +69,6 @@ services:
     volumes:
       - ${DATA}/microwarp:/etc/wireguard # Keep account data to avoid rate limits
 
-
   # subconverter:
   #   image: 'asdlokj1qpi23/subconverter:latest'
   #   container_name: subconverter
@@ -81,7 +79,7 @@ services:
   #   restart: unless-stopped
 
   it-tools:
-    image: 'corentinth/it-tools:latest'
+    image: "corentinth/it-tools:latest"
     container_name: it-tools
     networks:
       - lan
@@ -89,51 +87,51 @@ services:
       test:
         - CMD
         - curl
-        - '-f'
-        - 'http://127.0.0.1:80'
+        - "-f"
+        - "http://127.0.0.1:80"
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
 
   vaultwarden:
-    image: 'vaultwarden/server:latest'
+    image: "vaultwarden/server:latest"
     container_name: vaultwarden
     environment:
-      - 'DOMAIN=${VW_DOMAIN}'
-      - 'SIGNUPS_ALLOWED=false'
+      - "DOMAIN=${VW_DOMAIN}"
+      - "SIGNUPS_ALLOWED=false"
     networks:
       - lan
     volumes:
-      - '${DATA}/vw:/data'
+      - "${DATA}/vw:/data"
     healthcheck:
       test:
         - CMD
         - curl
-        - '-f'
-        - 'http://127.0.0.1:80'
+        - "-f"
+        - "http://127.0.0.1:80"
       interval: 2s
       timeout: 10s
       retries: 15
     restart: unless-stopped
 
   syncthing:
-    image: 'lscr.io/linuxserver/syncthing:latest'
+    image: "lscr.io/linuxserver/syncthing:latest"
     container_name: syncthing
     environment:
-      - 'TZ=Asia/Shanghai'
-      - 'PUID=0'
-      - 'PGID=0'
+      - "TZ=Asia/Shanghai"
+      - "PUID=0"
+      - "PGID=0"
     volumes:
-      - '${DATA}/syncthing/config:/config'
-      - '${DATA}/syncthing/data1:/data1'
+      - "${DATA}/syncthing/config:/config"
+      - "${DATA}/syncthing/data1:/data1"
     networks:
       - lan
     ports:
       # - '8384:8384'
-      - '22000:22000/tcp'
-      - '22000:22000/udp'
-      - '21027:21027/udp'
+      - "22000:22000/tcp"
+      - "22000:22000/udp"
+      - "21027:21027/udp"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8384/rest/noauth/health"]
       interval: 5s
