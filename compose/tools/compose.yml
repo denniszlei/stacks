@@ -4,7 +4,7 @@ networks:
 
 services:
   gluetun:
-    image: qmcgaw/gluetun:v3.41
+    image: qmcgaw/gluetun:latest
     container_name: gluetun
     # line above must be uncommented to allow external containers to connect.
     # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
