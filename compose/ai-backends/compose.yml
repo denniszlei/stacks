@@ -127,21 +127,21 @@ services:
   #     - API_KEYS=${CLAUDE_API_KEY}
   #     - HTTP_PROXY=${HTTP_PROXY}
 
-  ds2api:
-    image: ghcr.io/cjackhwang/ds2api:latest
-    container_name: ds2api
-    restart: always
-    networks:
-      - lan
-    ports:
-      - "5001:5001"
-    volumes:
-      - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
-      # - ./.env:/app/.env                  # 环境变量
-    environment:
-      - TZ=Asia/Shanghai
-      - LOG_LEVEL=INFO
-      - DS2API_ADMIN_KEY=${DS2API_ADMIN_KEY:-ds2api}
+  # ds2api:
+  #   image: ghcr.io/cjackhwang/ds2api:latest
+  #   container_name: ds2api
+  #   restart: always
+  #   networks:
+  #     - lan
+  #   ports:
+  #     - "5001:5001"
+  #   volumes:
+  #     - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
+  #     # - ./.env:/app/.env                  # 环境变量
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #     - LOG_LEVEL=INFO
+  #     - DS2API_ADMIN_KEY=${DS2API_ADMIN_KEY:-ds2api}
 
   qwen2api:
     container_name: qwen2api
