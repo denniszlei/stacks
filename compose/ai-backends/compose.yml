@@ -4,44 +4,57 @@ networks:
 
 services:
 
-  studiobuild2api:
-    # image: hkfires/aistudiobuildws:latest
-    build: https://github.com/hkfires/AIStudioBuildWS.git
-    container_name: aibuildws2api
-    environment:
-      - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
-      - CAMOUFOX_PROXY=${HTTP_PROXY}
-    volumes:
-      - ${DATA}/buildws/cookies:/app/cookies:rw
-      - ${DATA}/buildws/logs:/app/logs:rw
-    restart: always
-    networks:
-      - lan
-    deploy:
-      resources:
-        limits:
-          cpus: '2'       # 限制最多使用 2 个 CPU 核心
-          memory: 4G        # 限制内存最大为 2GB
-        reservations:
-          memory: 2G      # 保证至少分配 512M 内存
-
-  aistudio2api:
-    image: ghcr.io/ibuhub/aistudio-to-api:latest
-    container_name: aistudio2api
+  aistudio-api:
+    image: ghcr.io/chrysoljq/aistudio-api:latest
+    container_name: aistudio-api
+    restart: unless-stopped
     networks:
       - lan
     # ports:
-    #   - 7860:7860
-    restart: unless-stopped
+    #   - "8080:8080"
     volumes:
-      - ${DATA}/aistudio2api/auth:/app/configs/auth
-      - ${DATA}/aistudio2api/data:/app/data
+      - ${DATA}/aistudio-api:/app/data
     environment:
-      API_KEYS: ${CLAUDE_API_KEY}
-      TZ: Asia/Shanghai
-      WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
-      WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
-      HTTP_PROXY: ${HTTP_PROXY}
+      - AISTUDIO_PROXY=${HTTP_PROXY}
+
+  # studiobuild2api:
+  #   # image: hkfires/aistudiobuildws:latest
+  #   build: https://github.com/hkfires/AIStudioBuildWS.git
+  #   container_name: aibuildws2api
+  #   environment:
+  #     - CAMOUFOX_INSTANCE_URL=${AIBUILD_URL}
+  #     - CAMOUFOX_PROXY=${HTTP_PROXY}
+  #   volumes:
+  #     - ${DATA}/buildws/cookies:/app/cookies:rw
+  #     - ${DATA}/buildws/logs:/app/logs:rw
+  #   restart: always
+  #   networks:
+  #     - lan
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '2'       # 限制最多使用 2 个 CPU 核心
+  #         memory: 4G        # 限制内存最大为 2GB
+  #       reservations:
+  #         memory: 2G      # 保证至少分配 512M 内存
+
+  # aistudio2api:
+  #   image: ghcr.io/ibuhub/aistudio-to-api:latest
+  #   container_name: aistudio2api
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - 7860:7860
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${DATA}/aistudio2api/auth:/app/configs/auth
+  #     - ${DATA}/aistudio2api/data:/app/data
+  #   environment:
+  #     API_KEYS: ${CLAUDE_API_KEY}
+  #     TZ: Asia/Shanghai
+  #     WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
+  #     WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
+  #     HTTP_PROXY: ${HTTP_PROXY}
 
   cli-proxy-api:
     image: eceasy/cli-proxy-api:latest
