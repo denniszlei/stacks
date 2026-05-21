@@ -205,6 +205,7 @@ services:
       # 图片缓存
       # Image cache mode (default: memory / file: disk)
       - CACHE_MODE=default
+      - LOG_LEVEL=debug
 
   zai-openai:
     build: https://github.com/jiujiu532/z2api.git
