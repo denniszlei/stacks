@@ -189,7 +189,7 @@ services:
     environment:
       - SERVICE_PORT=3000
       - API_KEY=${CLAUDE_API_KEY}
-      - PROXY_URL=${HTTP_PROXY}
+      # - PROXY_URL=${HTTP_PROXY}
       - PM2_INSTANCES=1
       - PM2_MAX_MEMORY=1G
       # Search info display mode (table: collapsible tables / text: plain text)
