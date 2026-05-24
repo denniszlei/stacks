@@ -111,7 +111,7 @@ services:
     build:
       context: https://github.com/cloudriver8/grok2api.git#feat/console-x-ai-routing
     # image: ghcr.io/chenyme/grok2api:latest
-    # container_name: grok2api
+    container_name: grok2api
     # ports:
     #   - "18000:8000"
     volumes:
