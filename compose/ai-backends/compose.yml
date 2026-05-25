@@ -174,7 +174,7 @@ services:
     environment:
       # - TZ=Asia/Shanghai
       # - LOG_LEVEL=INFO
-      - DS_TOKEN=${DS_TOKEN}
+      - DS_TOKENS=${DS_TOKENS}
       - API_KEY=${CLAUDE_API_KEY}
 
   qwen2api:
