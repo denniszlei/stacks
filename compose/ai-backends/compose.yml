@@ -185,6 +185,7 @@ services:
     build: https://github.com/XxxXTeam/ds2api.git
     image: ds2api-xteam:latest
     container_name: ds2api
+    pull_policy: never
     restart: always
     networks:
       - lan
