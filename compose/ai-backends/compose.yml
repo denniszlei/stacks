@@ -53,37 +53,21 @@ services:
       - ${DATA}/aistudio-api:/app/data
     environment:
       - AISTUDIO_PROXY=${HTTP_PROXY}
-      - AISTUDIO_PORT=8080
-      - AISTUDIO_BROWSER=camoufox
-      - AISTUDIO_BROWSER_PORT=9222
-      - AISTUDIO_LOGIN_BROWSER_PORT=9223
+      # - AISTUDIO_BROWSER=camoufox
+      # - AISTUDIO_BROWSER_PORT=9222
+      # - AISTUDIO_LOGIN_BROWSER_PORT=9223
       - AISTUDIO_BROWSER_HEADLESS=1
       - AISTUDIO_API_KEY=${GCLI2API_API}
-      - AISTUDIO_TMP_DIR=/tmp
-      - AISTUDIO_DEFAULT_TEXT_MODEL=gemma-4-31b-it
-      - AISTUDIO_DEFAULT_IMAGE_MODEL=gemini-3.1-flash-image-preview
-      - AISTUDIO_TIMEOUT_REPLAY=120
-      - AISTUDIO_TIMEOUT_STREAM=120
-      - AISTUDIO_TIMEOUT_CAPTURE=30
-      - AISTUDIO_SNAPSHOT_CACHE_TTL=3600
-      - AISTUDIO_SNAPSHOT_CACHE_MAX=100
-      - AISTUDIO_DUMP_RAW_RESPONSE=0
-      - AISTUDIO_DUMP_RAW_RESPONSE_DIR=/tmp
-      - AISTUDIO_LOGIN_BROWSER_PORT=9223
-      - AISTUDIO_ACCOUNT_ROTATION_MODE=round_robin
-      - AISTUDIO_ACCOUNT_COOLDOWN_SECONDS=60
-      - AISTUDIO_ACCOUNT_MAX_RETRIES=3
-      - AISTUDIO_MAX_CONCURRENCY=3
-    command:
-      - /bin/bash
-      - -c
-      - |
-        set -e
-        python3 -m pip install --no-cache-dir camoufox
-        python3 -m pip install --no-cache-dir python-multipart
-        exec python3 main.py server \
-          --port "$${AISTUDIO_PORT:-8080}" \
-          --camoufox-port "$${AISTUDIO_BROWSER_PORT:-9222}"
+    # command:
+    #   - /bin/bash
+    #   - -c
+    #   - |
+    #     set -e
+    #     python3 -m pip install --no-cache-dir camoufox
+    #     python3 -m pip install --no-cache-dir python-multipart
+    #     exec python3 main.py server \
+    #       --port "$${AISTUDIO_PORT:-8080}" \
+    #       --camoufox-port "$${AISTUDIO_BROWSER_PORT:-9222}"
 
 
   # studiobuild2api:
