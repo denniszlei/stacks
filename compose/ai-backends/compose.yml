@@ -144,10 +144,10 @@ services:
     restart: unless-stopped
 
   grok2api:
-    image: 'mypr/grok2api:latest'
-    build:
-      context: https://github.com/cloudriver8/grok2api.git#feat/console-x-ai-routing
-    # image: ghcr.io/chenyme/grok2api:latest
+    # image: 'mypr/grok2api:latest'
+    # build:
+    #   context: https://github.com/cloudriver8/grok2api.git#feat/console-x-ai-routing
+    image: ghcr.io/jiujiu532/grok2api:latest
     container_name: grok2api
     # ports:
     #   - "18000:8000"
