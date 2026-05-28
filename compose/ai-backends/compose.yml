@@ -4,30 +4,41 @@ networks:
 
 services:
 
-  mimi3:
-    build:
-      context: https://github.com/wkeqin/mimi3.git
-    image: mimi3:latest
-    container_name: mimi3
-    init: true
+  free-models:
+    image: ghcr.io/denniszlei/merged-free-models:latest
+    container_name: free-models
     restart: unless-stopped
     # ports:
-    #   - "${SERVER_PORT:-8000}:${SERVER_PORT:-8000}"
+    #   - "8080}:8080}"
     networks:
       - lan
-    volumes:
-      - ${DATA}/mimi3/users:/app/users
-      - ${DATA}/mimi3/logs:/app/logs
-      - ${DATA}/mimi3/data:/app/data
     environment:
-      - HTTP_PROXY=${RES_HOME_PROXY}
-      - HTTPS_PROXY=${RES_HOME_PROXY}
-      - WS_TUNNEL_URL=${MIMO_TUNNEL_URL}
-      - MIMO_RELAY_OPENAI_KEY=${CLAUDE_API_KEY}
-      - MIMO_WEBUI_USERNAME=${CLAUDE_ADMIN_USER}
-      - MIMO_WEBUI_PASSWORD=${CLAUDE_ADMIN_PASS}
-      - MIMO_WEBUI_SECRET=${JWT_SECRET}
-      - MIMO_WEBUI_COOKIE_SECURE=true
+      - PROXY_API_KEY=${CLAUDE_API_KEY}
+
+  # mimi3:
+  #   build:
+  #     context: https://github.com/wkeqin/mimi3.git
+  #   image: mimi3:latest
+  #   container_name: mimi3
+  #   init: true
+  #   restart: unless-stopped
+  #   # ports:
+  #   #   - "${SERVER_PORT:-8000}:${SERVER_PORT:-8000}"
+  #   networks:
+  #     - lan
+  #   volumes:
+  #     - ${DATA}/mimi3/users:/app/users
+  #     - ${DATA}/mimi3/logs:/app/logs
+  #     - ${DATA}/mimi3/data:/app/data
+  #   environment:
+  #     - HTTP_PROXY=${RES_HOME_PROXY}
+  #     - HTTPS_PROXY=${RES_HOME_PROXY}
+  #     - WS_TUNNEL_URL=${MIMO_TUNNEL_URL}
+  #     - MIMO_RELAY_OPENAI_KEY=${CLAUDE_API_KEY}
+  #     - MIMO_WEBUI_USERNAME=${CLAUDE_ADMIN_USER}
+  #     - MIMO_WEBUI_PASSWORD=${CLAUDE_ADMIN_PASS}
+  #     - MIMO_WEBUI_SECRET=${JWT_SECRET}
+  #     - MIMO_WEBUI_COOKIE_SECURE=true
 
 
   aistudio-api:
@@ -186,22 +197,22 @@ services:
   #     - API_KEYS=${CLAUDE_API_KEY}
   #     - HTTP_PROXY=${HTTP_PROXY}
 
-  ds2api:
-    image: ds2api-42:latest
-    container_name: ds2api
-    restart: always
-    networks:
-      - lan
-    # ports:
-    #   - "3000:3000"
-    # volumes:
-    #   - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
-      # - ./.env:/app/.env                  # 环境变量
-    environment:
-      # - TZ=Asia/Shanghai
-      # - LOG_LEVEL=INFO
-      - DS_TOKENS=${DS_TOKENS}
-      - API_KEY=${CLAUDE_API_KEY}
+  # ds2api:
+  #   image: ds2api-42:latest
+  #   container_name: ds2api
+  #   restart: always
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "3000:3000"
+  #   # volumes:
+  #   #   - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
+  #     # - ./.env:/app/.env                  # 环境变量
+  #   environment:
+  #     # - TZ=Asia/Shanghai
+  #     # - LOG_LEVEL=INFO
+  #     - DS_TOKENS=${DS_TOKENS}
+  #     - API_KEY=${CLAUDE_API_KEY}
 
   qwen2api:
     container_name: qwen2api
@@ -235,53 +246,6 @@ services:
       - CACHE_MODE=default
       # - LOG_LEVEL=debug
 
-  # zai-openai:
-  #   build: https://github.com/jiujiu532/z2api.git
-  #   container_name: zai-openai
-  #   # working_dir: /app
-  #   environment:
-  #     - LOG_LEVEL=INFO
-  #     - HTTP_DEBUG=0
-  #     - ENABLE_THINKING=1
-  #     # ── 超时（防截断/断流） ──
-  #     - UPSTREAM_FIRST_EVENT_TIMEOUT=120
-  #     - TOKEN_MAX_AGE=480
-  #     # ── 重试（防空回/断流） ──
-  #     - UPSTREAM_FIRST_EVENT_TIMEOUT_RETRY_MAX=5
-  #     - MAX_STREAM_RETRIES=5
-  #     - SSE_HEARTBEAT_INTERVAL=15
-  #     # # ── 池管理（8C8G 拉满） ──
-  #     # - POOL_MIN_SIZE=1
-  #     # - POOL_MAX_SIZE=8
-  #     # - POOL_TARGET_INFLIGHT_PER_ACCOUNT=2
-  #     # - POOL_MAINTAIN_INTERVAL=10
-  #     # - POOL_SCALE_DOWN_IDLE_ROUNDS=3
-  #     # # ── 并发（8C8G 拉满） ──
-  #     # - GLOBAL_CONCURRENCY_LIMIT=128
-  #   # volumes:
-  #   #   - ${DATA}/zai2api:/app
-  #   # command: ["python", "server.py"]
-  #   # ports:
-  #   #   - "30016:30016"
-  #   networks:
-  #     - lan
-  #   restart: unless-stopped
-
-  # gemini-fastapi:
-  #   image: ghcr.io/luuquangvu/gemini-fastapi:latest
-  #   container_name: gemini-fastapi
-  #   # ports:
-  #   #   - "18001:8000"
-  #   networks:
-  #     - lan
-  #   volumes:
-  #     - ${DATA}/gemini-fastapi/config:/app/config  # Uncomment to use a custom config file
-  #     # - ${DATA}/certs:/app/certs        # Uncomment to enable HTTPS with your certs
-  #     - ${DATA}/gemini-fastapi/data:/app/data
-  #     - ${DATA}/gemini-fastapi/cache:/app/cache
-  #   environment:
-  #     - GEMINI_COOKIE_PATH=/app/cache
-  #   restart: always
 
 
   # gcli2api:
