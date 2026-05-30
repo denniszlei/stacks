@@ -9,7 +9,7 @@ services:
     container_name: free-models
     restart: unless-stopped
     # ports:
-    #   - "8080}:8080}"
+    #   - "8080:8080"
     networks:
       - lan
     environment:
@@ -31,8 +31,8 @@ services:
   #     - ${DATA}/mimi3/logs:/app/logs
   #     - ${DATA}/mimi3/data:/app/data
   #   environment:
-  #     - HTTP_PROXY=${RES_HOME_PROXY}
-  #     - HTTPS_PROXY=${RES_HOME_PROXY}
+  #     - HTTP_PROXY=${WS_RES_PROXY}
+  #     - HTTPS_PROXY=${WS_RES_PROXY}
   #     - WS_TUNNEL_URL=${MIMO_TUNNEL_URL}
   #     - MIMO_RELAY_OPENAI_KEY=${CLAUDE_API_KEY}
   #     - MIMO_WEBUI_USERNAME=${CLAUDE_ADMIN_USER}
@@ -155,20 +155,27 @@ services:
       - PROXY_HOST=http://gluetun
       - PROXY_PORT=8888
 
-  # freebuff2api:
-  #   image: ghcr.io/quorinex/freebuff2api:latest
-  #   container_name: freebuff2api
-  #   restart: unless-stopped
-  #   networks:
-  #     - lan
-  #   # ports:
-  #   #   - "${PORT:-8080}:8080"
-  #   environment:
-  #     # - LISTEN_ADDR=:8080
-  #     - AUTH_TOKENS=${FREEBUFF_AUTH_TOKENS}
-  #     # - UPSTREAM_BASE_URL=https://codebuff.com
-  #     - API_KEYS=${CLAUDE_API_KEY}
-  #     - HTTP_PROXY=${HTTP_PROXY}
+  freebuff2api:
+    image: ghcr.io/denniszlei/freebuff2api:latest
+    container_name: freebuff2api
+    restart: unless-stopped
+    networks:
+      - lan
+    # ports:
+    #   - "8000:8000"
+    environment:
+      - FREEBUFF_TOKEN=${FREEBUFF_AUTH_TOKENS}
+      - FREEBUFF_API_KEY=${CLAUDE_API_KEY}
+      - FREEBUFF_AD_PROVIDERS=gravity,zeroclick
+      - FREEBUFF_PROXY_ENABLED=true
+      - FREEBUFF_PROXY_URL=${WS_RES_PROXY}
+      - FREEBUFF_DEBUG=true
+      - FREEBUFF_LOG_COLOR=true
+      - FREEBUFF_TIMEZONE=America/Los_Angeles
+      - FREEBUFF_LOCALE=en-US
+      - FREEBUFF_OS=windows
+      - FREEBUFF_BROWSER_UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+
 
   ds2api:
     build: https://github.com/XxxXTeam/ds2api.git
