@@ -68,8 +68,8 @@ services:
     volumes:
       - ${DATA}/geminiweb2api/config.json:/app/config.json
       - ${DATA}/geminiweb2api/cookie.txt:/app/cookie.txt
-    environment:
-      - HTTP_PROXY=${HTTP_PROXY}
+    # environment:
+    #   - HTTP_PROXY=${HTTP_PROXY}
     restart: unless-stopped
 
   # studiobuild2api:
