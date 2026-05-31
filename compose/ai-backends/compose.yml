@@ -58,6 +58,17 @@ services:
     healthcheck:
       disable: true
 
+  gemini-web2api:
+    build: https://github.com/Sophomoresty/gemini-web2api.git
+    container_name: gemini-web2api
+    # ports:
+    #   - "8081:8081"
+    volumes:
+      - ${DATA}/geminiweb2api/config.json:/app/config.json
+      - ${DATA}/geminiweb2api/cookie.txt:/app/cookie.txt
+    environment:
+      - HTTP_PROXY=${HTTP_PROXY}
+    restart: unless-stopped
 
   # studiobuild2api:
   #   # image: hkfires/aistudiobuildws:latest
