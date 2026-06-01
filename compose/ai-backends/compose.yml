@@ -18,7 +18,7 @@ services:
   mimi3:
     build:
       context: https://github.com/wkeqin/mimi3.git
-    image: mimi3:latest
+    # image: mimi3:latest
     container_name: mimi3
     init: true
     restart: unless-stopped
