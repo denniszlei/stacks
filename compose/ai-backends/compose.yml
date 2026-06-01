@@ -17,7 +17,7 @@ services:
 
   mimi3:
     build:
-      context: https://github.com/wkeqin/mimi3.git
+      context: https://github.com/jiujiu532/mimi3.git#main
     # image: mimi3:latest
     container_name: mimi3
     init: true
