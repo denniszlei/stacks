@@ -15,31 +15,6 @@ services:
     environment:
       - PROXY_API_KEY=${CLAUDE_API_KEY}
 
-  # mimi3:
-  #   build:
-  #     context: https://github.com/jiujiu532/mimi3.git#main
-  #   # image: mimi3:latest
-  #   container_name: mimi3
-  #   init: true
-  #   restart: unless-stopped
-  #   # ports:
-  #   #   - "${SERVER_PORT:-8000}:${SERVER_PORT:-8000}"
-  #   networks:
-  #     - lan
-  #   volumes:
-  #     - ${DATA}/mimi3/users:/app/users
-  #     - ${DATA}/mimi3/logs:/app/logs
-  #     - ${DATA}/mimi3/data:/app/data
-  #   environment:
-  #     - HTTP_PROXY=${WS_RES_PROXY}
-  #     - HTTPS_PROXY=${WS_RES_PROXY}
-  #     - WS_TUNNEL_URL=${MIMO_TUNNEL_URL}
-  #     - MIMO_RELAY_OPENAI_KEY=${CLAUDE_API_KEY}
-  #     - MIMO_WEBUI_USERNAME=${CLAUDE_ADMIN_USER}
-  #     - MIMO_WEBUI_PASSWORD=${CLAUDE_ADMIN_PASS}
-  #     - MIMO_WEBUI_SECRET=${JWT_SECRET}
-  #     - MIMO_WEBUI_COOKIE_SECURE=true
-
 
   aistudio-api:
     image: ghcr.io/chrysoljq/aistudio-api:latest
