@@ -15,8 +15,8 @@ services:
     environment:
       - FREE_ACCOUNTS=false
       - Authorization=${CLAUDE_API_KEY}
-    # volumes:
-    #   - ${DATA}/aurora/access_tokens.txt:/app/access_tokens.txt
+    volumes:
+      - ${DATA}/aurora/access_tokens.txt:/app/access_tokens.txt
 
 
   free-models:
