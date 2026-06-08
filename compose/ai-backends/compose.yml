@@ -4,21 +4,6 @@ networks:
 
 services:
 
-  aurora:
-    image: ghcr.io/aurora-develop/aurora:latest
-    container_name: aurora
-    restart: unless-stopped
-    # ports:
-    #   - '8080:8080'
-    networks:
-      - lan
-    environment:
-      - FREE_ACCOUNTS=false
-      - Authorization=${CLAUDE_API_KEY}
-    volumes:
-      - ${DATA}/aurora/access_tokens.txt:/app/access_tokens.txt
-
-
   free-models:
     image: ghcr.io/denniszlei/merged-free-models:latest
     container_name: free-models
