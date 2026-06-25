@@ -176,7 +176,7 @@ services:
       - Authorization=${CLAUDE_API_KEY}
       - FREE_ACCOUNTS=false
     volumes:
-      - ${DATA}/aurora/access_tokens.txt:/access_tokens.txt
+      - ${DATA}/aurora/access_tokens.txt:/app/access_tokens.txt
 
   # ds2api:
   #   build: https://github.com/XxxXTeam/ds2api.git
