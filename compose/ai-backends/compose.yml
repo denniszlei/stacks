@@ -164,25 +164,36 @@ services:
       - FREEBUFF_OS=windows
       - FREEBUFF_BROWSER_UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
 
-
-  ds2api:
-    build: https://github.com/XxxXTeam/ds2api.git
-    image: ds2api-xteam:latest
-    container_name: ds2api
-    pull_policy: never
-    restart: always
-    networks:
-      - lan
-    # ports:
-    #   - "5001:5001"
-    volumes:
-      - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
-      # - ./.env:/app/.env                  # 环境变量
+  aurora:
+    image: ghcr.io/aurora-develop/aurora:latest
+    container_name: aurora
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
     environment:
-      - TZ=Asia/Shanghai
-      - LOG_LEVEL=INFO
-      - DS2API_CONFIG_PATH=/app/config.json
-      - DS2API_ADMIN_KEY=${CLAUDE_ADMIN_PASS}
+      - Authorization=${CLAUDE_API_KEY}
+      - FREE_ACCOUNTS=false
+    volumes:
+      - ${DATA}/aurora/access_tokens.txt:/access_tokens.txt
+
+  # ds2api:
+  #   build: https://github.com/XxxXTeam/ds2api.git
+  #   image: ds2api-xteam:latest
+  #   container_name: ds2api
+  #   pull_policy: never
+  #   restart: always
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "5001:5001"
+  #   volumes:
+  #     - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
+  #     # - ./.env:/app/.env                  # 环境变量
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #     - LOG_LEVEL=INFO
+  #     - DS2API_CONFIG_PATH=/app/config.json
+  #     - DS2API_ADMIN_KEY=${CLAUDE_ADMIN_PASS}
 
   qwen2api:
     container_name: qwen2api
@@ -218,35 +229,3 @@ services:
 
 
 
-  # gcli2api:
-  #   image: ghcr.io/su-kaka/gcli2api:latest
-  #   container_name: gcli2api
-  #   restart: unless-stopped
-  #   ports:
-  #     - "7861:7861"
-  #   networks:
-  #     - lan
-  #   environment:
-  #     - PORT=7861
-  #     # 或使用分离密码（推荐用于生产环境）
-  #     - API_PASSWORD=${GCLI2API_API}
-  #     - PANEL_PASSWORD=${GCLI2API_PASSWORD}
-  #   volumes:
-  #     - ${DATA}/gcli2api/creds:/app/creds
-  #   # healthcheck:
-  #   #   test: ["CMD-SHELL", "python -c \"import sys, urllib.request, os; port = os.environ.get('PORT', '7861'); req = urllib.request.Request(f'http://localhost:{port}/v1/models', headers={'Authorization': 'Bearer ' + os.environ.get('PASSWORD', 'pwd')}); sys.exit(0 if urllib.request.urlopen(req, timeout=5).getcode() == 200 else 1)\""]
-  #   #   interval: 30s
-  #   #   timeout: 10s
-  #   #   retries: 3
-  #   #   start_period: 40s
-
-  # clewdr:
-  #   image: ghcr.io/xerxes-2/clewdr:latest
-  #   container_name: clewdr
-  #   volumes:
-  #     - ${DATA}/clewdr:/etc/clewdr
-  #   networks:
-  #     - lan
-  #   # ports:
-  #   #   - "8484:8484"
-  #   restart: unless-stopped
