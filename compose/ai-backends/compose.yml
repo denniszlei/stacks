@@ -4,16 +4,16 @@ networks:
 
 services:
 
-  free-models:
-    image: ghcr.io/denniszlei/merged-free-models:latest
-    container_name: free-models
-    restart: unless-stopped
-    # ports:
-    #   - "8080:8080"
-    networks:
-      - lan
-    environment:
-      - PROXY_API_KEY=${CLAUDE_API_KEY}
+  # free-models:
+  #   image: ghcr.io/denniszlei/merged-free-models:latest
+  #   container_name: free-models
+  #   restart: unless-stopped
+  #   # ports:
+  #   #   - "8080:8080"
+  #   networks:
+  #     - lan
+  #   environment:
+  #     - PROXY_API_KEY=${CLAUDE_API_KEY}
 
 
   aistudio-api:
@@ -164,19 +164,19 @@ services:
       - FREEBUFF_OS=windows
       - FREEBUFF_BROWSER_UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
 
-  aurora:
-    image: ghcr.io/aurora-develop/aurora:latest
-    container_name: aurora
-    restart: unless-stopped
-    networks:
-      - lan
-    ports:
-      - '8080:8080'
-    environment:
-      - Authorization=${CLAUDE_API_KEY}
-      - FREE_ACCOUNTS=false
-    volumes:
-      - ${DATA}/aurora/access_tokens.txt:/app/access_tokens.txt
+  # aurora:
+  #   image: ghcr.io/aurora-develop/aurora:latest
+  #   container_name: aurora
+  #   restart: unless-stopped
+  #   networks:
+  #     - lan
+  #   ports:
+  #     - '8080:8080'
+  #   environment:
+  #     - Authorization=${CLAUDE_API_KEY}
+  #     - FREE_ACCOUNTS=false
+  #   volumes:
+  #     - ${DATA}/aurora/access_tokens.txt:/app/access_tokens.txt
 
   # ds2api:
   #   build: https://github.com/XxxXTeam/ds2api.git
