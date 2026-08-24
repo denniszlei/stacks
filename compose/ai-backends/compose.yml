@@ -105,26 +105,26 @@ services:
     restart: unless-stopped
 
   grok2api:
-    # image: 'mypr/grok2api:latest'
-    # build:
-    #   context: https://github.com/cloudriver8/grok2api.git#feat/console-x-ai-routing
-    image: ghcr.io/jiujiu532/grok2api:latest
+    image: ghcr.io/chenyme/grok2api:latest
     container_name: grok2api
     # ports:
     #   - "18000:8000"
     volumes:
-      - ${DATA}/grok2api:/app/data
-      - ${DATA}/grok2api/logs:/app/logs
+      - ${DATA}/grok2api/config.yaml:/run/grok2api/config.yaml:ro"
+      - ${DATA}/grok2api/data:/app/data
+      - ${DATA}/grok2api/state:/var/lib/grok2api-quality-guard
     environment:
-      # - STORAGE_MODE=file
       TZ: Asia/Shanghai
-      LOG_LEVEL: INFO
-      SERVER_PORT: 8000
-      SERVER_WORKERS: 1
-      ACCOUNT_STORAGE: local
+      # 非空时覆盖 config.yaml 的 PostgreSQL DSN，并自动启用 postgres。
+      # GROK2API_DATABASE_URL: "${GROK2API_DATABASE_URL:-}"
+      # GROK2API_QUALITY_GUARD_DIR: /var/lib/grok2api-quality-guard
     networks:
       - lan
     restart: always
+    init: true
+    stop_grace_period: 30s
+    security_opt:
+      - no-new-privileges:true
 
   claude2api:
     image: pushzx/claude2api:latest-arm64
@@ -143,59 +143,26 @@ services:
       - PROXY_HOST=http://gluetun
       - PROXY_PORT=8888
 
-  freebuff2api:
-    image: ghcr.io/denniszlei/freebuff2api:latest
-    container_name: freebuff2api
-    restart: unless-stopped
-    networks:
-      - lan
-    # ports:
-    #   - "8000:8000"
-    environment:
-      - FREEBUFF_TOKEN=${FREEBUFF_AUTH_TOKENS}
-      - FREEBUFF_API_KEY=${CLAUDE_API_KEY}
-      - FREEBUFF_AD_PROVIDERS=gravity,zeroclick
-      - FREEBUFF_PROXY_ENABLED=true
-      - FREEBUFF_PROXY_URL=${WS_RES_PROXY}
-      - FREEBUFF_DEBUG=true
-      - FREEBUFF_LOG_COLOR=true
-      - FREEBUFF_TIMEZONE=America/Los_Angeles
-      - FREEBUFF_LOCALE=en-US
-      - FREEBUFF_OS=windows
-      - FREEBUFF_BROWSER_UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
-
-  # aurora:
-  #   image: ghcr.io/aurora-develop/aurora:latest
-  #   container_name: aurora
+  # freebuff2api:
+  #   image: ghcr.io/denniszlei/freebuff2api:latest
+  #   container_name: freebuff2api
   #   restart: unless-stopped
   #   networks:
   #     - lan
-  #   ports:
-  #     - '8080:8080'
-  #   environment:
-  #     - Authorization=${CLAUDE_API_KEY}
-  #     - FREE_ACCOUNTS=false
-  #   volumes:
-  #     - ${DATA}/aurora/access_tokens.txt:/app/access_tokens.txt
-
-  # ds2api:
-  #   build: https://github.com/XxxXTeam/ds2api.git
-  #   image: ds2api-xteam:latest
-  #   container_name: ds2api
-  #   pull_policy: never
-  #   restart: always
-  #   networks:
-  #     - lan
   #   # ports:
-  #   #   - "5001:5001"
-  #   volumes:
-  #     - ${DATA}/ds2api/config.json:/app/config.json    # 配置文件
-  #     # - ./.env:/app/.env                  # 环境变量
+  #   #   - "8000:8000"
   #   environment:
-  #     - TZ=Asia/Shanghai
-  #     - LOG_LEVEL=INFO
-  #     - DS2API_CONFIG_PATH=/app/config.json
-  #     - DS2API_ADMIN_KEY=${CLAUDE_ADMIN_PASS}
+  #     - FREEBUFF_TOKEN=${FREEBUFF_AUTH_TOKENS}
+  #     - FREEBUFF_API_KEY=${CLAUDE_API_KEY}
+  #     - FREEBUFF_AD_PROVIDERS=gravity,zeroclick
+  #     - FREEBUFF_PROXY_ENABLED=true
+  #     - FREEBUFF_PROXY_URL=${WS_RES_PROXY}
+  #     - FREEBUFF_DEBUG=true
+  #     - FREEBUFF_LOG_COLOR=true
+  #     - FREEBUFF_TIMEZONE=America/Los_Angeles
+  #     - FREEBUFF_LOCALE=en-US
+  #     - FREEBUFF_OS=windows
+  #     - FREEBUFF_BROWSER_UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
 
   qwen2api:
     container_name: qwen2api
