@@ -32,21 +32,59 @@ services:
       retries: 5
       start_period: 15s
 
-  axonhub:
-    image: looplj/axonhub:latest
-    container_name: axonhub
+  metapi:
+    image: 1467078763/metapi:latest
+    # ports:
+    #   - "4000:4000"
+    volumes:
+      - ${DATA}/metapi:/app/data
+    environment:
+      AUTH_TOKEN: ${GPTLOAD_AUTH_KEY:?AUTH_TOKEN is required}
+      PROXY_TOKEN: ${API_KEY:?PROXY_TOKEN is required}
+      CHECKIN_CRON: "0 8 * * *"
+      BALANCE_REFRESH_CRON: "0 * * * *"
+      PORT: ${PORT:-4000}
+      DATA_DIR: /app/data
+      TZ: ${TZ:-Asia/Shanghai}
+    restart: unless-stopped
+
+  gpt-load:
+    image: ghcr.io/tbphp/gpt-load:latest
+    container_name: gpt-load
+    ports:
+      - "3001:3001"
     networks:
       - lan
-    # ports:
-    #   - "8090:8090"
-    volumes:
-      - ${DATA}/axonhub/config.yml:/app/config.yml
-      - ${DATA}/axonhub/data:/app/data
+    # env_file:
+    #   - gpt-load.env
     environment:
-      - AXONHUB_SERVER_PORT=8090
-      - AXONHUB_DB_DIALECT=sqlite3
-      - AXONHUB_DB_DSN=file:/app/data/axonhub.db?cache=shared&_fk=1
-    restart: unless-stopped
+      - AUTH_KEY=${GPTLOAD_AUTH_KEY}
+    restart: always
+    volumes:
+      - ${DATA}/gptload:/app/data
+    stop_grace_period: 10s
+    healthcheck:
+      test: wget -q --spider -T 10 -O /dev/null http://localhost:${PORT:-3001}/health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # axonhub:
+  #   image: looplj/axonhub:latest
+  #   container_name: axonhub
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "8090:8090"
+  #   volumes:
+  #     - ${DATA}/axonhub/config.yml:/app/config.yml
+  #     - ${DATA}/axonhub/data:/app/data
+  #   environment:
+  #     - AXONHUB_SERVER_PORT=8090
+  #     - AXONHUB_DB_DIALECT=sqlite3
+  #     - AXONHUB_DB_DSN=file:/app/data/axonhub.db?cache=shared&_fk=1
+  #   restart: unless-stopped
     # healthcheck:
     #   test: wget --no-verbose --tries=1 --spider http://localhost:8090/health
     #   interval: 30s
@@ -126,24 +164,3 @@ services:
   #     # 如果使用 sqlite，将宿主机包含 stats.db 的目录挂载到容器内，建议只读【:ro】
   #     - ${DATA}/uniapi/uniapi_db:/app/data:ro
   #
-  # gpt-load:
-  #   image: ghcr.io/tbphp/gpt-load:latest
-  #   container_name: gpt-load
-  #   ports:
-  #     - "3001:3001"
-  #   networks:
-  #     - lan
-  #   # env_file:
-  #   #   - gpt-load.env
-  #   environment:
-  #     - AUTH_KEY=${GPTLOAD_AUTH_KEY}
-  #   restart: always
-  #   volumes:
-  #     - ${DATA}/gptload:/app/data
-  #   stop_grace_period: 10s
-  #   healthcheck:
-  #     test: wget -q --spider -T 10 -O /dev/null http://localhost:${PORT:-3001}/health
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #     start_period: 40s
