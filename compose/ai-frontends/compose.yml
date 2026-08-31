@@ -34,6 +34,7 @@ services:
 
   metapi:
     image: 1467078763/metapi:latest
+    container_name: metapi
     # ports:
     #   - "4000:4000"
     networks:
