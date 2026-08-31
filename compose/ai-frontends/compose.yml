@@ -36,6 +36,8 @@ services:
     image: 1467078763/metapi:latest
     # ports:
     #   - "4000:4000"
+    networks:
+      - lan
     volumes:
       - ${DATA}/metapi:/app/data
     environment:
