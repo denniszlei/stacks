@@ -16,22 +16,22 @@ services:
   #     - PROXY_API_KEY=${CLAUDE_API_KEY}
 
 
-  aistudio-api:
-    image: ghcr.io/chrysoljq/aistudio-api:latest
-    container_name: aistudio-api
-    restart: unless-stopped
-    networks:
-      - lan
-    # ports:
-    #   - "8080:8080"
-    volumes:
-      - ${DATA}/aistudio-api:/app/data
-    environment:
-      - AISTUDIO_PROXY=${HTTP_PROXY}
-      - AISTUDIO_BROWSER_HEADLESS=1
-      - AISTUDIO_API_KEY=${GCLI2API_API}
-    healthcheck:
-      disable: true
+  # aistudio-api:
+  #   image: ghcr.io/chrysoljq/aistudio-api:latest
+  #   container_name: aistudio-api
+  #   restart: unless-stopped
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "8080:8080"
+  #   volumes:
+  #     - ${DATA}/aistudio-api:/app/data
+  #   environment:
+  #     - AISTUDIO_PROXY=${HTTP_PROXY}
+  #     - AISTUDIO_BROWSER_HEADLESS=1
+  #     - AISTUDIO_API_KEY=${GCLI2API_API}
+  #   healthcheck:
+  #     disable: true
 
   gemini-web2api:
     build: https://github.com/Sophomoresty/gemini-web2api.git
@@ -68,23 +68,23 @@ services:
   #       reservations:
   #         memory: 2G      # 保证至少分配 512M 内存
 
-  # aistudio2api:
-  #   image: ghcr.io/ibuhub/aistudio-to-api:latest
-  #   container_name: aistudio2api
-  #   networks:
-  #     - lan
-  #   # ports:
-  #   #   - 7860:7860
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ${DATA}/aistudio2api/auth:/app/configs/auth
-  #     - ${DATA}/aistudio2api/data:/app/data
-  #   environment:
-  #     API_KEYS: ${CLAUDE_API_KEY}
-  #     TZ: Asia/Shanghai
-  #     WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
-  #     WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
-  #     HTTP_PROXY: ${HTTP_PROXY}
+  aistudio2api:
+    image: ghcr.io/ibuhub/aistudio-to-api:latest
+    container_name: aistudio2api
+    networks:
+      - lan
+    # ports:
+    #   - 7860:7860
+    restart: unless-stopped
+    volumes:
+      - ${DATA}/aistudio2api/auth:/app/configs/auth
+      - ${DATA}/aistudio2api/data:/app/data
+    environment:
+      API_KEYS: ${CLAUDE_API_KEY}
+      TZ: Asia/Shanghai
+      WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
+      WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
+      HTTP_PROXY: ${HTTP_PROXY}
 
   cli-proxy-api:
     image: eceasy/cli-proxy-api:latest
