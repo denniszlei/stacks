@@ -84,7 +84,7 @@ services:
       TZ: Asia/Shanghai
       WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
       WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
-      HTTP_PROXY: ${HTTP_PROXY}
+      HTTP_PROXY: ${GLUETUN_PROXY}
 
   cli-proxy-api:
     image: eceasy/cli-proxy-api:latest
