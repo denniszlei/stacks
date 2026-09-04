@@ -3,34 +3,34 @@ networks:
     external: true
 
 services:
-  lens:
-    image: ghcr.io/dyedd/lens:latest
-    # build: https://github.com/dyedd/lens.git
-    container_name: lens
-    environment:
-      - LENS_HOST=0.0.0.0
-      - LENS_PORT=3000
-      - LENS_DATABASE_URL=sqlite+aiosqlite:////app/data/data.db
-      - LENS_UI_STATIC_DIR=/app/ui
-      - LENS_AUTH_SECRET_KEY=${ENCRYPTION_KEY}
-    networks:
-      - lan
-    # ports:
-    #   - "3000:3000"
-    volumes:
-      - ${DATA}/lens:/app/data
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "python",
-          "-c",
-          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/healthz', timeout=5)",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
+  # lens:
+  #   image: ghcr.io/dyedd/lens:latest
+  #   # build: https://github.com/dyedd/lens.git
+  #   container_name: lens
+  #   environment:
+  #     - LENS_HOST=0.0.0.0
+  #     - LENS_PORT=3000
+  #     - LENS_DATABASE_URL=sqlite+aiosqlite:////app/data/data.db
+  #     - LENS_UI_STATIC_DIR=/app/ui
+  #     - LENS_AUTH_SECRET_KEY=${ENCRYPTION_KEY}
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "3000:3000"
+  #   volumes:
+  #     - ${DATA}/lens:/app/data
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD",
+  #         "python",
+  #         "-c",
+  #         "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/healthz', timeout=5)",
+  #       ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 15s
 
   metapi:
     image: 1467078763/metapi:latest
@@ -72,6 +72,31 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  gpt-load2:
+    image: ghcr.io/tbphp/gpt-load:2
+    ports:
+      # - "${BIND_ADDRESS:-${HOST:-127.0.0.1}}:${PORT:-3001}:${PORT:-3001}"
+      - "${OAUTH_CALLBACK_BIND_ADDRESS:-${HOST:-127.0.0.1}}:1455:1455"
+      - "${OAUTH_CALLBACK_BIND_ADDRESS:-${HOST:-127.0.0.1}}:54545:54545"
+      - "${OAUTH_CALLBACK_BIND_ADDRESS:-${HOST:-127.0.0.1}}:51121:51121"
+    # env_file:
+    #   - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: ${PORT:-3001}
+      DATA_DIR: /app/data
+    restart: always
+    volumes:
+      - ${DATA}/gptload2:/app/data
+    stop_grace_period: ${CONTAINER_STOP_GRACE_PERIOD:-15s}
+    healthcheck:
+      test: wget -q --spider -T 10 -O /dev/null http://localhost:${PORT:-3001}/health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
 
   # axonhub:
   #   image: looplj/axonhub:latest
