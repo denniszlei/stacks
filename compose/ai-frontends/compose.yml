@@ -75,6 +75,9 @@ services:
 
   gpt-load2:
     image: ghcr.io/tbphp/gpt-load:2
+    container_name: gptload2
+    networks:
+      - lan    
     ports:
       # - "${BIND_ADDRESS:-${HOST:-127.0.0.1}}:${PORT:-3001}:${PORT:-3001}"
       - "${OAUTH_CALLBACK_BIND_ADDRESS:-${HOST:-127.0.0.1}}:1455:1455"
