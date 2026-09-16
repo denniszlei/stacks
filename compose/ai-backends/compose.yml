@@ -97,7 +97,7 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  在管理端将 Clearance 模式设为 FlareSolverr 或按需刷新，并使用 http://flaresolverr:8191。
+  ## 在管理端将 Clearance 模式设为 FlareSolverr 或按需刷新，并使用 http://flaresolverr:8191。
   flaresolverr:
     container_name: flaresolverr
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -107,7 +107,6 @@ services:
     networks:
       - lan
     restart: unless-stopped
-
 
   claude2api:
     image: pushzx/claude2api:latest-arm64
