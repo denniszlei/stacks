@@ -4,35 +4,6 @@ networks:
 
 services:
 
-  # free-models:
-  #   image: ghcr.io/denniszlei/merged-free-models:latest
-  #   container_name: free-models
-  #   restart: unless-stopped
-  #   # ports:
-  #   #   - "8080:8080"
-  #   networks:
-  #     - lan
-  #   environment:
-  #     - PROXY_API_KEY=${CLAUDE_API_KEY}
-
-
-  # aistudio-api:
-  #   image: ghcr.io/chrysoljq/aistudio-api:latest
-  #   container_name: aistudio-api
-  #   restart: unless-stopped
-  #   networks:
-  #     - lan
-  #   # ports:
-  #   #   - "8080:8080"
-  #   volumes:
-  #     - ${DATA}/aistudio-api:/app/data
-  #   environment:
-  #     - AISTUDIO_PROXY=${HTTP_PROXY}
-  #     - AISTUDIO_BROWSER_HEADLESS=1
-  #     - AISTUDIO_API_KEY=${GCLI2API_API}
-  #   healthcheck:
-  #     disable: true
-
   gemini-web2api:
     build: https://github.com/Sophomoresty/gemini-web2api.git
     container_name: gemini-web2api
@@ -125,6 +96,18 @@ services:
     stop_grace_period: 30s
     security_opt:
       - no-new-privileges:true
+
+  在管理端将 Clearance 模式设为 FlareSolverr 或按需刷新，并使用 http://flaresolverr:8191。
+  flaresolverr:
+    container_name: flaresolverr
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    environment:
+      TZ: Asia/Shanghai
+      LOG_LEVEL: info
+    networks:
+      - lan
+    restart: unless-stopped
+
 
   claude2api:
     image: pushzx/claude2api:latest-arm64
