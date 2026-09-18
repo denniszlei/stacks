@@ -89,6 +89,7 @@ services:
       HOST: 0.0.0.0
       PORT: ${PORT:-3001}
       DATA_DIR: /app/data
+      AUTH_KEY: ${GPTLOAD_AUTH_KEY}
     restart: always
     volumes:
       - ${DATA}/gptload2:/app/data
