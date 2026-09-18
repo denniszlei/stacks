@@ -51,27 +51,27 @@ services:
       TZ: ${TZ:-Asia/Shanghai}
     restart: unless-stopped
 
-  gpt-load:
-    image: ghcr.io/tbphp/gpt-load:latest
-    container_name: gpt-load
-    ports:
-      - "3001:3001"
-    networks:
-      - lan
-    # env_file:
-    #   - gpt-load.env
-    environment:
-      - AUTH_KEY=${GPTLOAD_AUTH_KEY}
-    restart: always
-    volumes:
-      - ${DATA}/gptload:/app/data
-    stop_grace_period: 10s
-    healthcheck:
-      test: wget -q --spider -T 10 -O /dev/null http://localhost:${PORT:-3001}/health
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+  # gpt-load:
+  #   image: ghcr.io/tbphp/gpt-load:latest
+  #   container_name: gpt-load
+  #   ports:
+  #     - "3001:3001"
+  #   networks:
+  #     - lan
+  #   # env_file:
+  #   #   - gpt-load.env
+  #   environment:
+  #     - AUTH_KEY=${GPTLOAD_AUTH_KEY}
+  #   restart: always
+  #   volumes:
+  #     - ${DATA}/gptload:/app/data
+  #   stop_grace_period: 10s
+  #   healthcheck:
+  #     test: wget -q --spider -T 10 -O /dev/null http://localhost:${PORT:-3001}/health
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 40s
 
   gpt-load2:
     image: ghcr.io/tbphp/gpt-load:2
