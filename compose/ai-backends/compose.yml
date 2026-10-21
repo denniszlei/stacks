@@ -4,19 +4,19 @@ networks:
 
 services:
 
-  gemini-web2api:
-    build: https://github.com/Sophomoresty/gemini-web2api.git
-    container_name: gemini-web2api
-    networks:
-      - lan
-    # ports:
-    #   - "8081:8081"
-    volumes:
-      - ${DATA}/geminiweb2api/config.json:/app/config.json
-      - ${DATA}/geminiweb2api/cookie.txt:/app/cookie.txt
-    # environment:
-    #   - HTTP_PROXY=${WS_RES_PROXY}
-    restart: unless-stopped
+  # gemini-web2api:
+  #   build: https://github.com/Sophomoresty/gemini-web2api.git
+  #   container_name: gemini-web2api
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "8081:8081"
+  #   volumes:
+  #     - ${DATA}/geminiweb2api/config.json:/app/config.json
+  #     - ${DATA}/geminiweb2api/cookie.txt:/app/cookie.txt
+  #   # environment:
+  #   #   - HTTP_PROXY=${WS_RES_PROXY}
+  #   restart: unless-stopped
 
   # studiobuild2api:
   #   # image: hkfires/aistudiobuildws:latest
@@ -125,58 +125,26 @@ services:
       - PROXY_HOST=http://gluetun
       - PROXY_PORT=8888
 
-  # freebuff2api:
-  #   image: ghcr.io/denniszlei/freebuff2api:latest
-  #   container_name: freebuff2api
-  #   restart: unless-stopped
-  #   networks:
-  #     - lan
-  #   # ports:
-  #   #   - "8000:8000"
-  #   environment:
-  #     - FREEBUFF_TOKEN=${FREEBUFF_AUTH_TOKENS}
-  #     - FREEBUFF_API_KEY=${CLAUDE_API_KEY}
-  #     - FREEBUFF_AD_PROVIDERS=gravity,zeroclick
-  #     - FREEBUFF_PROXY_ENABLED=true
-  #     - FREEBUFF_PROXY_URL=${WS_RES_PROXY}
-  #     - FREEBUFF_DEBUG=true
-  #     - FREEBUFF_LOG_COLOR=true
-  #     - FREEBUFF_TIMEZONE=America/Los_Angeles
-  #     - FREEBUFF_LOCALE=en-US
-  #     - FREEBUFF_OS=windows
-  #     - FREEBUFF_BROWSER_UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+  workbuddy2api:
+    image: ghcr.io/denniszlei/workbuddy2api-panel:latest
+    container_name: workbuddy2api
+    restart: unless-stopped
+    user: "${PUID:-10001}:${PGID:-10001}"
+    environment:
+      - TZ=Asia/Shanghai
+    # ports:
+    #   - "7863:7863"
+    networks:
+      - lan
+    volumes:
+      - ${DATA}/workbuddy2api/auths:/app/auths
+      - ${DATA}/workbuddy2api/data:/app/data
+      # 注意：宿主机必须先有 config.json（cp config.example.json config.json）。
+      # 缺失时 Docker 会把挂载点创建成目录 → 容器启动失败（程序会自动生成配置，
+      # 但前提是它能以文件形式写入 —— 挂载目录会挡住这条路径）。
+      # 不挂 :ro：面板「配置」页需要写回此文件（保存后热生效）。
+      - ${DATA}/workbuddy2api/config.json:/app/config.json
 
-  # qwen2api:
-  #   container_name: qwen2api
-  #   image: rfym21/qwen2api:latest
-  #   restart: always
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - lan
-  #   volumes:
-  #     - ${DATA}/qwen2api/:/app/data
-  #     - ${DATA}/qwen2api/logs:/app/logs
-  #   environment:
-  #     - SERVICE_PORT=3000
-  #     - API_KEY=${CLAUDE_API_KEY}
-  #     # - PROXY_URL=${HTTP_PROXY}
-  #     - PM2_INSTANCES=1
-  #     - PM2_MAX_MEMORY=1G
-  #     # Search info display mode (table: collapsible tables / text: plain text)
-  #     - SEARCH_INFO_MODE=table
-  #     - OUTPUT_THINK=true
-  #     - SIMPLE_MODEL_MAP=true
-  #     # 数据保存模式
-  #     # Data save mode (none / file / redis)
-  #     - DATA_SAVE_MODE=none
-  #     # 账号(如果使用redis和file模式，则不需要填写)
-  #     # Accounts (not needed for redis/file mode)
-  #     - ACCOUNTS=${QW_ACCOUNTS}
-  #     # 图片缓存
-  #     # Image cache mode (default: memory / file: disk)
-  #     - CACHE_MODE=default
-  #     # - LOG_LEVEL=debug
 
 
 
