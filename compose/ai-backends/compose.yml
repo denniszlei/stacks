@@ -126,7 +126,7 @@ services:
       - PROXY_PORT=8888
 
   workbuddy2api:
-    image: ghcr.io/denniszlei/workbuddy2api-panel:latest
+    image: ghcr.io/misakano7545/workbuddy2api-panel:latest
     container_name: workbuddy2api
     restart: unless-stopped
     user: "${PUID:-10001}:${PGID:-10001}"
