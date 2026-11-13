@@ -39,23 +39,43 @@ services:
   #       reservations:
   #         memory: 2G      # 保证至少分配 512M 内存
 
+  # aistudio2api:
+  #   image: ghcr.io/ibuhub/aistudio-to-api:latest
+  #   container_name: aistudio2api
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - 7860:7860
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${DATA}/aistudio2api/auth:/app/configs/auth
+  #     - ${DATA}/aistudio2api/data:/app/data
+  #   environment:
+  #     API_KEYS: ${CLAUDE_API_KEY}
+  #     TZ: Asia/Shanghai
+  #     WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
+  #     WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
+  #     HTTP_PROXY: ${GLUETUN_PROXY}
+
   aistudio2api:
-    image: ghcr.io/ibuhub/aistudio-to-api:latest
+    image: ghcr.io/mag1cfall/aistudio2api:latest
     container_name: aistudio2api
     networks:
       - lan
     # ports:
-    #   - 7860:7860
+    #   - "2048:2048"
+    #   - "2050:2050"
     restart: unless-stopped
     volumes:
-      - ${DATA}/aistudio2api/auth:/app/configs/auth
-      - ${DATA}/aistudio2api/data:/app/data
-    environment:
-      API_KEYS: ${CLAUDE_API_KEY}
-      TZ: Asia/Shanghai
-      WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
-      WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
-      HTTP_PROXY: ${GLUETUN_PROXY}
+      # - ${DATA}/aistudio2api/auth:/app/configs/auth
+      - ${DATA}/aistudio2api/data:/data
+    # environment:
+    #   API_KEYS: ${CLAUDE_API_KEY}
+    #   TZ: Asia/Shanghai
+    #   WEB_CONSOLE_USERNAME: ${CLAUDE_ADMIN_USER}
+    #   WEB_CONSOLE_PASSWORD: ${CLAUDE_ADMIN_PASS}
+    #   HTTP_PROXY: ${GLUETUN_PROXY}
+
 
   cli-proxy-api:
     image: eceasy/cli-proxy-api:latest
@@ -108,22 +128,22 @@ services:
       - lan
     restart: unless-stopped
 
-  claude2api:
-    image: pushzx/claude2api:latest-arm64
-    container_name: claude2api
-    restart: unless-stopped
-    networks:
-      - lan
-    # ports:
-    #   - "${PORT:-8080}:8080"
-    environment:
-      - LISTEN_ADDR=:8080
-      - CLAUDE_SESSION_KEYS=${CLAUDE_SESSION_KEYS}
-      - ADMIN_USER=${CLAUDE_ADMIN_USER}
-      - ADMIN_PASS=${CLAUDE_ADMIN_PASS}
-      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
-      - PROXY_HOST=http://gluetun
-      - PROXY_PORT=8888
+  # claude2api:
+  #   image: pushzx/claude2api:latest-arm64
+  #   container_name: claude2api
+  #   restart: unless-stopped
+  #   networks:
+  #     - lan
+  #   # ports:
+  #   #   - "${PORT:-8080}:8080"
+  #   environment:
+  #     - LISTEN_ADDR=:8080
+  #     - CLAUDE_SESSION_KEYS=${CLAUDE_SESSION_KEYS}
+  #     - ADMIN_USER=${CLAUDE_ADMIN_USER}
+  #     - ADMIN_PASS=${CLAUDE_ADMIN_PASS}
+  #     - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+  #     - PROXY_HOST=http://gluetun
+  #     - PROXY_PORT=8888
 
   workbuddy2api:
     image: ghcr.io/misakano7545/workbuddy2api-panel:latest
