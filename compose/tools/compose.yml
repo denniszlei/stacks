@@ -76,11 +76,15 @@ services:
     container_name: proxygate
     networks:
       - lan
-    # ports:
+    ports:
     #   - "8080:8080"
+      - "19092:1080"
     volumes:
       - "${DATA}/proxygate:/data"
     restart: unless-stopped
+    environment:
+      PROXYGATE_SOCKS5_LISTEN_ADDRESS: 0.0.0.0
+
 
   resin:
     image: ghcr.io/resinat/resin:latest
