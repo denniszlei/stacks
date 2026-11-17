@@ -70,14 +70,33 @@ services:
     volumes:
       - ${DATA}/microwarp:/etc/wireguard # Keep account data to avoid rate limits
 
-  # subconverter:
-  #   image: 'asdlokj1qpi23/subconverter:latest'
-  #   container_name: subconverter
-  #   networks:
-  #     - lan
-  #   ports:
-  #     - "25500:25500"
-  #   restart: unless-stopped
+  proxygate:
+    # image: "serjs/go-socks5-proxy:latest"
+    build: https://github.com/ExpTechTW/proxygate.git
+    container_name: proxygate
+    networks:
+      - lan
+    # ports:
+    #   - "8080:8080"
+    volumes:
+      - "${DATA}/proxygate:/data"
+    restart: unless-stopped
+
+  resin:
+    image: ghcr.io/resinat/resin:latest
+    container_name: resin
+    restart: unless-stopped
+    environment:
+      RESIN_ADMIN_TOKEN: "${RESIN_ADMIN_TOKEN}" # Change to your admin dashboard password
+      RESIN_PROXY_TOKEN: "${RESIN_PROXY_TOKEN}" # Change to your proxy password
+      RESIN_LISTEN_ADDRESS: 0.0.0.0
+      RESIN_PORT: 2260
+    # ports:
+    #   - "2260:2260"
+    volumes:
+      - ${DATA}/resin/cache:/var/cache/resin
+      - ${DATA}/resin/state:/var/lib/resin
+      - ${DATA}/resin/log:/var/log/resin
 
   it-tools:
     image: "corentinth/it-tools:latest"
