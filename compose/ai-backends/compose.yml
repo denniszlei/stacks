@@ -13,8 +13,11 @@ services:
     #   - "8007:8007"
     volumes:
       - ${DATA}/geminiweb2api:/data
-    # environment:
-    #   - HTTP_PROXY=${WS_RES_PROXY}
+    environment:
+      - LISTEN_ADDR=0.0.0.0:8007
+      - PROXY_API_KEY=${CLAUDE_API_KEY}
+      - ADMIN_AUTH_ENABLED=true
+      - ADMIN_PASSWORD=${CLAUDE_ADMIN_PASS}
     restart: unless-stopped
 
   aistudio2api:
